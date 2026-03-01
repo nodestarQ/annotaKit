@@ -16,6 +16,7 @@
 
 	function handleMouseMove(e: MouseEvent) {
 		if (annotakitState.mode === 'idle' || annotakitState.isDragging) return;
+		if (isAnnotakitElement(e.target as Element)) return;
 
 		// Throttle via rAF
 		if (rafId !== null) return;
@@ -38,6 +39,9 @@
 
 	function handleClick(e: MouseEvent) {
 		if (annotakitState.mode === 'idle' || annotakitState.mode === 'select') return;
+
+		// If the click originated from an annotakit element (panel, pin, toolbar), ignore it
+		if (isAnnotakitElement(e.target as Element)) return;
 
 		// Temporarily hide overlay to get the real target
 		if (overlayEl) overlayEl.style.display = 'none';

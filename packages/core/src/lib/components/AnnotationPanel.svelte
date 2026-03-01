@@ -3,26 +3,23 @@
 
 	let annotation = $derived(annotakitState.activeAnnotation);
 
-	// Position the panel near the annotation's element
-	let panelPosition = $derived.by(() => {
-		if (!annotation) return null;
-		try {
-			const el = document.querySelector(annotation.element.selector);
-			if (!el) return { top: 100, left: 100 };
-			const rect = el.getBoundingClientRect();
-			const panelWidth = 320;
-			let left = rect.right + 12;
-			if (left + panelWidth > window.innerWidth) {
-				left = rect.left - panelWidth - 12;
-			}
-			if (left < 8) left = 8;
-			let top = rect.top;
-			if (top + 300 > window.innerHeight) {
-				top = Math.max(8, window.innerHeight - 308);
-			}
-			return { top, left };
-		} catch {
-			return { top: 100, left: 100 };
+	const toolbarHeight = 48;
+	const gap = 8;
+
+	let toolbarInLowerHalf = $derived(
+		annotakitState.toolbarPosition.y > (typeof window !== 'undefined' ? window.innerHeight / 2 : 360)
+	);
+
+	let panelStyle = $derived.by(() => {
+		const x = annotakitState.toolbarPosition.x;
+		const y = annotakitState.toolbarPosition.y;
+		if (toolbarInLowerHalf) {
+			// Render above toolbar
+			return `left: ${x}px; bottom: calc(100vh - ${y}px + ${gap}px); max-height: calc(${y}px - ${gap * 2}px);`;
+		} else {
+			// Render below toolbar
+			const top = y + toolbarHeight + gap;
+			return `left: ${x}px; top: ${top}px; max-height: calc(100vh - ${top}px - ${gap}px);`;
 		}
 	});
 
@@ -53,13 +50,13 @@
 	}
 </script>
 
-{#if annotation && panelPosition}
+{#if annotation}
 	<div
 		data-annotakit="panel"
-		class="pointer-events-auto fixed z-[99999] w-80 rounded-xl border border-annotakit-border bg-annotakit-surface shadow-annotakit dark:border-annotakit-border-dark dark:bg-annotakit-surface-dark"
-		style="top: {panelPosition.top}px; left: {panelPosition.left}px;"
+		class="pointer-events-auto fixed z-[99999] flex w-80 flex-col rounded-xl border border-annotakit-border bg-annotakit-surface shadow-annotakit dark:border-annotakit-border-dark dark:bg-annotakit-surface-dark"
+		style={panelStyle}
 	>
-		<div class="flex items-center justify-between border-b border-annotakit-border px-3 py-2 dark:border-annotakit-border-dark">
+		<div class="flex shrink-0 items-center justify-between border-b border-annotakit-border px-3 py-2 dark:border-annotakit-border-dark">
 			<span class="font-mono text-xs font-medium text-annotakit-text dark:text-annotakit-text-dark">
 				{annotation.element.tagName}{#if annotation.element.id}#{annotation.element.id}{/if}
 			</span>
@@ -72,7 +69,7 @@
 			</button>
 		</div>
 
-		<div class="space-y-2 p-3">
+		<div class="space-y-2 overflow-y-auto p-3">
 			<!-- Selector -->
 			<div>
 				<div class="mb-0.5 text-[10px] font-medium uppercase tracking-wider text-annotakit-text/50 dark:text-annotakit-text-dark/50">Selector</div>

@@ -37,8 +37,9 @@
 
 	function handlePointerMove(e: PointerEvent) {
 		if (!annotakitState.isDragging) return;
-		const x = Math.max(0, Math.min(window.innerWidth - 200, e.clientX - dragOffset.x));
-		const y = Math.max(0, Math.min(window.innerHeight - 48, e.clientY - dragOffset.y));
+		const margin = 8;
+		const x = Math.max(margin, Math.min(window.innerWidth - 320 - margin, e.clientX - dragOffset.x));
+		const y = Math.max(margin, Math.min(window.innerHeight - 48 - margin, e.clientY - dragOffset.y));
 		annotakitState.toolbarPosition = { x, y };
 	}
 
@@ -54,7 +55,7 @@
 {#if !annotakitState.minimized}
 	<div
 		data-annotakit="toolbar"
-		class="fixed z-[99999] flex select-none items-center gap-1 rounded-xl border border-annotakit-border bg-annotakit-surface px-2 py-1.5 shadow-annotakit dark:border-annotakit-border-dark dark:bg-annotakit-surface-dark"
+		class="fixed z-[99999] flex w-80 select-none items-center justify-between gap-1 rounded-xl border border-annotakit-border bg-annotakit-surface px-2 py-1.5 shadow-annotakit dark:border-annotakit-border-dark dark:bg-annotakit-surface-dark"
 		style="left: {annotakitState.toolbarPosition.x}px; top: {annotakitState.toolbarPosition.y}px;"
 		role="toolbar"
 		tabindex="0"

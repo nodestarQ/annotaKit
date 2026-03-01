@@ -31,7 +31,7 @@
 
 	// Resolve initial toolbar position from position prop
 	function resolvePosition(pos: AnnotakitPosition): { x: number; y: number } {
-		const margin = 16;
+		const margin = 8;
 		const toolbarWidth = 320;
 		const toolbarHeight = 44;
 		const w = typeof window !== 'undefined' ? window.innerWidth : 1280;
