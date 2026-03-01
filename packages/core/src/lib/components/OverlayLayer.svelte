@@ -14,6 +14,10 @@
 	let pointerCurrent = $state<{ x: number; y: number } | null>(null);
 	let isTextDrag = $state(false);
 
+	// Hover highlight
+	let hoveredElement = $state<Element | null>(null);
+	let hoverRafId: number | null = null;
+
 	// Elements currently inside the selection box
 	let highlightedElements = $state<Element[]>([]);
 
@@ -29,6 +33,8 @@
 			height: Math.abs(pointerCurrent.y - pointerStart.y)
 		};
 	});
+
+	let hoverRect = $derived(hoveredElement ? hoveredElement.getBoundingClientRect() : null);
 
 	let highlightRects = $derived(
 		highlightedElements.map((el) => el.getBoundingClientRect())
@@ -88,6 +94,23 @@
 		return cursor === 'text';
 	}
 
+	function handleMouseMove(e: MouseEvent) {
+		if (!annotakitState.isActive || pointerStart) {
+			if (hoveredElement) hoveredElement = null;
+			return;
+		}
+		if (hoverRafId !== null) return;
+		hoverRafId = requestAnimationFrame(() => {
+			hoverRafId = null;
+			if (!annotakitState.isActive || pointerStart) {
+				hoveredElement = null;
+				return;
+			}
+			const target = getElementUnderPoint(e.clientX, e.clientY);
+			hoveredElement = target && !isAnnotakitElement(target) ? target : null;
+		});
+	}
+
 	function handlePointerDown(e: PointerEvent) {
 		if (!annotakitState.isActive) return;
 		if (isAnnotakitElement(e.target as Element)) return;
@@ -100,6 +123,7 @@
 		pointerCurrent = { x: e.clientX, y: e.clientY };
 		isDragging = false;
 		highlightedElements = [];
+		hoveredElement = null;
 
 		if (!isTextDrag) {
 			// Prevent native text selection for element drags
@@ -194,15 +218,18 @@
 	}
 
 	onMount(() => {
+		document.addEventListener('mousemove', handleMouseMove, true);
 		document.addEventListener('pointerdown', handlePointerDown, true);
 		document.addEventListener('pointermove', handlePointerMove, true);
 		document.addEventListener('pointerup', handlePointerUp, true);
 
 		return () => {
+			document.removeEventListener('mousemove', handleMouseMove, true);
 			document.removeEventListener('pointerdown', handlePointerDown, true);
 			document.removeEventListener('pointermove', handlePointerMove, true);
 			document.removeEventListener('pointerup', handlePointerUp, true);
 			if (dragRafId !== null) cancelAnimationFrame(dragRafId);
+			if (hoverRafId !== null) cancelAnimationFrame(hoverRafId);
 		};
 	});
 </script>
@@ -213,6 +240,17 @@
 	class="pointer-events-none fixed inset-0 z-[99997]"
 	class:cursor-crosshair={annotakitState.isActive}
 >
+	<!-- Hover highlight -->
+	{#if hoverRect && !isDragging && !annotakitState.activeAnnotation}
+		<div
+			data-annotakit="highlight"
+			class="pointer-events-none fixed z-[99998]"
+			style="top: {hoverRect.top}px; left: {hoverRect.left}px; width: {hoverRect.width}px; height: {hoverRect.height}px;"
+		>
+			<div class="absolute inset-0 rounded-sm border-2 border-annotakit-highlight-border bg-annotakit-highlight"></div>
+		</div>
+	{/if}
+
 	<!-- Highlights for elements inside selection box -->
 	{#each highlightRects as rect}
 		<div
