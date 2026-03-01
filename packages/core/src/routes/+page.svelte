@@ -96,6 +96,41 @@
 		</article>
 	</section>
 
+	<!-- Animations -->
+	<section class="space-y-4">
+		<h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Animations</h2>
+		<div class="flex flex-wrap items-center gap-6">
+			<!-- Pulse -->
+			<div class="flex flex-col items-center gap-2">
+				<div class="h-12 w-12 animate-pulse rounded-full bg-blue-500"></div>
+				<span class="text-xs text-gray-500">Pulse</span>
+			</div>
+			<!-- Spin -->
+			<div class="flex flex-col items-center gap-2">
+				<div class="h-12 w-12 animate-spin rounded-lg border-4 border-purple-300 border-t-purple-600"></div>
+				<span class="text-xs text-gray-500">Spin</span>
+			</div>
+			<!-- Bounce -->
+			<div class="flex flex-col items-center gap-2">
+				<div class="h-12 w-12 animate-bounce rounded-md bg-green-500"></div>
+				<span class="text-xs text-gray-500">Bounce</span>
+			</div>
+			<!-- Ping -->
+			<div class="flex flex-col items-center gap-2">
+				<div class="relative h-12 w-12">
+					<div class="absolute inset-0 animate-ping rounded-full bg-red-400 opacity-75"></div>
+					<div class="relative h-12 w-12 rounded-full bg-red-500"></div>
+				</div>
+				<span class="text-xs text-gray-500">Ping</span>
+			</div>
+			<!-- Custom float -->
+			<div class="flex flex-col items-center gap-2">
+				<div class="h-12 w-12 rounded-lg bg-amber-500" style="animation: float 2s ease-in-out infinite;"></div>
+				<span class="text-xs text-gray-500">Float</span>
+			</div>
+		</div>
+	</section>
+
 	<!-- Accessibility test section -->
 	<section class="space-y-4">
 		<h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">Accessibility</h2>

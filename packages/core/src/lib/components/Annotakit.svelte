@@ -63,6 +63,29 @@
 		}
 	});
 
+	// Freeze animations
+	$effect(() => {
+		if (!mounted) return;
+		const id = 'annotakit-freeze-styles';
+		if (annotakitState.frozen) {
+			if (!document.getElementById(id)) {
+				const style = document.createElement('style');
+				style.id = id;
+				style.textContent = `
+					*:not([data-annotakit] *) {
+						animation-play-state: paused !important;
+						transition: none !important;
+						transition-delay: 0s !important;
+						transition-duration: 0s !important;
+					}
+				`;
+				document.head.appendChild(style);
+			}
+		} else {
+			document.getElementById(id)?.remove();
+		}
+	});
+
 	// Keyboard shortcuts
 	function handleKeyDown(e: KeyboardEvent) {
 		if (e.key === 'Escape') {
@@ -79,6 +102,7 @@
 			document.removeEventListener('keydown', handleKeyDown);
 			document.body.classList.remove('annotakit-active');
 			document.documentElement.removeAttribute('data-annotakit-theme');
+			document.getElementById('annotakit-freeze-styles')?.remove();
 		};
 	});
 </script>

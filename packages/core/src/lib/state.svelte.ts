@@ -29,6 +29,7 @@ class AnnotakitState {
 	selectedAnnotationId = $state<string | null>(null);
 	showOutputDialog = $state(false);
 	copyFeedback = $state(false);
+	frozen = $state(false);
 
 	// Derived
 	activeAnnotation = $derived(
@@ -85,6 +86,7 @@ class AnnotakitState {
 	toggleMinimized(): void {
 		this.minimized = !this.minimized;
 		if (this.minimized) {
+			this.active = false;
 			this.selectedAnnotationId = null;
 		}
 	}

@@ -50,7 +50,7 @@
 {#if position}
 	<button
 		data-annotakit="pin"
-		class="pointer-events-auto fixed z-[99998] flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white shadow-md transition-transform {isSelected
+		class="pointer-events-auto fixed z-[99998] flex h-6 w-6 items-center justify-center rounded-md text-xs font-bold text-white shadow-md transition-transform {isSelected
 			? 'scale-125 bg-annotakit-primary-dark ring-2 ring-white'
 			: 'bg-annotakit-primary hover:scale-110'}"
 		style="top: {position.top}px; right: {position.right}px;"
