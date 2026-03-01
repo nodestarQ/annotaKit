@@ -1,10 +1,41 @@
 <script lang="ts">
 	import { Tooltip } from 'bits-ui';
+	import { cubicOut } from 'svelte/easing';
+	import type { TransitionConfig } from 'svelte/transition';
 	import { annotakitState } from '../state.svelte.js';
 	import type { OutputFormat } from '../types.js';
 	import { generateMarkdown, copyToClipboard } from '../core/output.js';
 
+	const COLLAPSED_WIDTH = 40;
+	const COMPACT_WIDTH = 240;
+	const EXPANDED_WIDTH = 320;
+
 	let isExpanded = $derived(annotakitState.activeAnnotation !== null);
+	let targetWidth = $derived(isExpanded ? EXPANDED_WIDTH : COMPACT_WIDTH);
+
+	function telescopeIn(node: HTMLElement, { duration = 250, easing = cubicOut }: { duration?: number; easing?: (t: number) => number } = {}): TransitionConfig {
+		const target = isExpanded ? EXPANDED_WIDTH : COMPACT_WIDTH;
+		return {
+			duration,
+			easing,
+			css: (t: number) => {
+				const width = COLLAPSED_WIDTH + (target - COLLAPSED_WIDTH) * t;
+				return `width: ${width}px; overflow: hidden;`;
+			}
+		};
+	}
+
+	function telescopeOut(node: HTMLElement, { duration = 200, easing = cubicOut }: { duration?: number; easing?: (t: number) => number } = {}): TransitionConfig {
+		const current = node.getBoundingClientRect().width;
+		return {
+			duration,
+			easing,
+			css: (t: number) => {
+				const width = COLLAPSED_WIDTH + (current - COLLAPSED_WIDTH) * t;
+				return `width: ${width}px; overflow: hidden;`;
+			}
+		};
+	}
 
 	const formatOptions: { value: OutputFormat; label: string }[] = [
 		{ value: 'compact', label: 'Compact' },
@@ -67,10 +98,12 @@
 	<div
 		data-annotakit="toolbar"
 		class="fixed right-2 bottom-2 z-[99999] flex select-none items-center gap-1 rounded-xl border border-annotakit-border bg-annotakit-surface px-2 py-1.5 shadow-annotakit transition-[width] duration-200 ease-out dark:border-annotakit-border-dark dark:bg-annotakit-surface-dark"
-		style="width: {isExpanded ? '20rem' : '15rem'};"
+		style="width: {targetWidth}px;"
 		role="toolbar"
 		tabindex="0"
 		aria-label="Annotakit toolbar"
+		in:telescopeIn
+		out:telescopeOut
 	>
 		<!-- Left: Output button -->
 		<div class="flex shrink-0 items-center gap-1">
@@ -219,7 +252,7 @@
 				onclick={() => annotakitState.toggleMinimized()}
 				title="Collapse toolbar"
 			>
-				<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+				<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
 			</button>
 		</div>
 	</div>
