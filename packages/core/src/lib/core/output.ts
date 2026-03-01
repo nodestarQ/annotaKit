@@ -5,6 +5,12 @@
 
 import type { Annotation, OutputFormat } from '../types.js';
 
+export const FORMAT_OPTIONS: { value: OutputFormat; label: string }[] = [
+	{ value: 'compact', label: 'Compact' },
+	{ value: 'standard', label: 'Standard' },
+	{ value: 'detailed', label: 'Detailed' }
+];
+
 function formatCompact(annotation: Annotation, index: number): string {
 	const parts = [`${index + 1}.`];
 	if (annotation.mode === 'multi' && annotation.elements && annotation.elements.length > 1) {

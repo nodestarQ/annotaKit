@@ -47,7 +47,3 @@ export function captureTextSelection(): TextSelectionInfo | null {
 		anchorSelector
 	};
 }
-
-export function clearTextSelection(): void {
-	window.getSelection()?.removeAllRanges();
-}

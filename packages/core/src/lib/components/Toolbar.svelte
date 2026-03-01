@@ -1,21 +1,27 @@
 <script lang="ts">
-	import { Tooltip } from 'bits-ui';
 	import { cubicOut } from 'svelte/easing';
 	import type { TransitionConfig } from 'svelte/transition';
 	import { annotakitState } from '../state.svelte.js';
-	import type { OutputFormat } from '../types.js';
-	import { generateMarkdown, copyToClipboard } from '../core/output.js';
+	import { generateMarkdown, copyToClipboard, FORMAT_OPTIONS } from '../core/output.js';
+	import Icon from './Icon.svelte';
+	import TooltipButton from './TooltipButton.svelte';
 
 	const COLLAPSED_WIDTH = 40;
 	const COMPACT_WIDTH = 272;
 	const EXPANDED_WIDTH = 320;
+
+	// Reusable button variant classes
+	const BTN = 'text-annotakit-text/50 hover:bg-annotakit-text hover:text-white dark:text-annotakit-text-dark/50 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark';
+	const BTN_ACTIVE = 'bg-annotakit-text text-white dark:bg-annotakit-text-dark dark:text-annotakit-surface-dark';
+	const BTN_DISABLED = 'cursor-default text-annotakit-text/15 dark:text-annotakit-text-dark/15';
+	const BTN_DANGER = 'text-annotakit-text/50 hover:bg-annotakit-danger hover:text-white dark:text-annotakit-text-dark/50 dark:hover:bg-annotakit-danger dark:hover:text-white';
 
 	let showSettings = $state(false);
 
 	let isExpanded = $derived(annotakitState.activeAnnotation !== null || showSettings);
 	let targetWidth = $derived(isExpanded ? EXPANDED_WIDTH : COMPACT_WIDTH);
 
-	function telescopeIn(node: HTMLElement, { duration = 250, easing = cubicOut }: { duration?: number; easing?: (t: number) => number } = {}): TransitionConfig {
+	function telescopeIn(_node: HTMLElement, { duration = 250, easing = cubicOut }: { duration?: number; easing?: (t: number) => number } = {}): TransitionConfig {
 		const target = isExpanded ? EXPANDED_WIDTH : COMPACT_WIDTH;
 		return {
 			duration,
@@ -39,12 +45,6 @@
 		};
 	}
 
-	const formatOptions: { value: OutputFormat; label: string }[] = [
-		{ value: 'compact', label: 'Compact' },
-		{ value: 'standard', label: 'Standard' },
-		{ value: 'detailed', label: 'Detailed' }
-	];
-
 	async function handleCopy() {
 		const md = generateMarkdown(annotakitState.annotations, annotakitState.outputFormat);
 		const ok = await copyToClipboard(md);
@@ -65,23 +65,22 @@
 			<div class="flex shrink-0 items-center justify-between border-b-2 border-annotakit-text/80 px-3 py-2 dark:border-annotakit-text-dark/30">
 				<span class="text-xs font-medium text-annotakit-text dark:text-annotakit-text-dark">Settings</span>
 				<button
-					class="rounded p-1 text-annotakit-text/50 transition-all duration-300 ease-out hover:bg-annotakit-text hover:text-white dark:text-annotakit-text-dark/50 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark"
+					class="rounded p-1 {BTN}"
 					onclick={() => (showSettings = false)}
 					title="Close settings"
 				>
-					<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+					<Icon name="x" />
 				</button>
 			</div>
 
 			<div class="space-y-2 p-3">
-				<!-- Output format -->
 				<div>
 					<div class="mb-1 text-[10px] font-medium uppercase tracking-wider text-annotakit-text/50 dark:text-annotakit-text-dark/50">Output format</div>
 					<div class="flex gap-1">
-						{#each formatOptions as fmt}
+						{#each FORMAT_OPTIONS as fmt}
 							<button
 								class="rounded px-2.5 py-1 text-xs transition-all duration-300 ease-out {annotakitState.outputFormat === fmt.value
-									? 'bg-annotakit-text text-white dark:bg-annotakit-text-dark dark:text-annotakit-surface-dark'
+									? BTN_ACTIVE
 									: 'text-annotakit-text/70 hover:bg-annotakit-text hover:text-white dark:text-annotakit-text-dark/70 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark'}"
 								onclick={() => (annotakitState.outputFormat = fmt.value)}
 							>
@@ -107,166 +106,65 @@
 	>
 		<!-- Left: Output button -->
 		<div class="flex shrink-0 items-center gap-1">
-			<Tooltip.Root delayDuration={300}>
-				<Tooltip.Trigger>
-					{#snippet child({ props })}
-						<button
-							{...props}
-							class="relative rounded p-1.5 text-xs font-medium text-annotakit-text/70 transition-all duration-300 ease-out hover:bg-annotakit-text hover:text-white dark:text-annotakit-text-dark/70 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark"
-							onclick={() => (annotakitState.showOutputDialog = true)}
-						>
-							<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
-							{#if annotakitState.annotationCount > 0}
-								<span class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-sm bg-annotakit-primary text-[10px] font-bold text-white">
-									{annotakitState.annotationCount}
-								</span>
-							{/if}
-						</button>
-					{/snippet}
-				</Tooltip.Trigger>
-				<Tooltip.Content
-					class="z-[100000] rounded border-2 border-annotakit-text/80 bg-annotakit-surface px-2 py-1 text-xs text-annotakit-text shadow-lg dark:border-annotakit-text-dark/30 dark:bg-annotakit-surface-dark dark:text-annotakit-text-dark"
-					sideOffset={8}
-				>
-					Output ({annotakitState.annotationCount})
-				</Tooltip.Content>
-			</Tooltip.Root>
+			<TooltipButton
+				label="Output ({annotakitState.annotationCount})"
+				class="relative text-xs font-medium {BTN}"
+				onclick={() => (annotakitState.showOutputDialog = true)}
+			>
+				<Icon name="file" />
+				{#if annotakitState.annotationCount > 0}
+					<span class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-sm bg-annotakit-primary text-[10px] font-bold text-white">
+						{annotakitState.annotationCount}
+					</span>
+				{/if}
+			</TooltipButton>
 
 			<div class="mx-0.5 h-5 w-px bg-annotakit-text/20 dark:bg-annotakit-text-dark/20"></div>
 		</div>
 
-		<!-- Center: Freeze | Edit | Copy | Delete | Settings (left to right) -->
+		<!-- Center: Freeze | Edit | Copy | Delete | Settings -->
 		<div class="flex flex-1 items-center justify-evenly">
-			<!-- Freeze animations (leftmost) -->
-			<Tooltip.Root delayDuration={300}>
-				<Tooltip.Trigger>
-					{#snippet child({ props })}
-						<button
-							{...props}
-							class="rounded p-1.5 transition-all duration-300 ease-out {annotakitState.frozen
-								? 'bg-annotakit-warning text-white'
-								: 'text-annotakit-text/50 hover:bg-annotakit-text hover:text-white dark:text-annotakit-text-dark/50 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark'}"
-							onclick={() => (annotakitState.frozen = !annotakitState.frozen)}
-						>
-							{#if annotakitState.frozen}
-								<!-- Play icon (filled) -->
-								<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="6 3 20 12 6 21 6 3"/></svg>
-							{:else}
-								<!-- Pause icon (filled) -->
-								<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/></svg>
-							{/if}
-						</button>
-					{/snippet}
-				</Tooltip.Trigger>
-				<Tooltip.Content
-					class="z-[100000] rounded border-2 border-annotakit-text/80 bg-annotakit-surface px-2 py-1 text-xs text-annotakit-text shadow-lg dark:border-annotakit-text-dark/30 dark:bg-annotakit-surface-dark dark:text-annotakit-text-dark"
-					sideOffset={8}
-				>
-					{annotakitState.frozen ? 'Resume animations' : 'Freeze animations'}
-				</Tooltip.Content>
-			</Tooltip.Root>
+			<TooltipButton
+				label={annotakitState.frozen ? 'Resume animations' : 'Freeze animations'}
+				class={annotakitState.frozen ? 'bg-annotakit-warning text-white' : BTN}
+				onclick={() => (annotakitState.frozen = !annotakitState.frozen)}
+			>
+				<Icon name={annotakitState.frozen ? 'play' : 'pause'} />
+			</TooltipButton>
 
-			<!-- Edit toggle -->
-			<Tooltip.Root delayDuration={300}>
-				<Tooltip.Trigger>
-					{#snippet child({ props })}
-						<button
-							{...props}
-							class="rounded p-1.5 transition-all duration-300 ease-out {annotakitState.active
-								? 'bg-annotakit-text text-white dark:bg-annotakit-text-dark dark:text-annotakit-surface-dark'
-								: 'text-annotakit-text/50 hover:bg-annotakit-text hover:text-white dark:text-annotakit-text-dark/50 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark'}"
-							onclick={() => annotakitState.toggleActive()}
-						>
-							<!-- Pencil icon -->
-							<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
-						</button>
-					{/snippet}
-				</Tooltip.Trigger>
-				<Tooltip.Content
-					class="z-[100000] rounded border-2 border-annotakit-text/80 bg-annotakit-surface px-2 py-1 text-xs text-annotakit-text shadow-lg dark:border-annotakit-text-dark/30 dark:bg-annotakit-surface-dark dark:text-annotakit-text-dark"
-					sideOffset={8}
-				>
-					{annotakitState.active ? 'Deactivate' : 'Activate'}
-				</Tooltip.Content>
-			</Tooltip.Root>
+			<TooltipButton
+				label={annotakitState.active ? 'Deactivate' : 'Activate'}
+				class={annotakitState.active ? BTN_ACTIVE : BTN}
+				onclick={() => annotakitState.toggleActive()}
+			>
+				<Icon name="pencil" />
+			</TooltipButton>
 
-			<!-- Copy -->
-			<Tooltip.Root delayDuration={300}>
-				<Tooltip.Trigger>
-					{#snippet child({ props })}
-						<button
-							{...props}
-							class="rounded p-1.5 transition-all duration-300 ease-out {annotakitState.annotationCount > 0
-								? 'text-annotakit-text/50 hover:bg-annotakit-text hover:text-white dark:text-annotakit-text-dark/50 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark'
-								: 'cursor-default text-annotakit-text/15 dark:text-annotakit-text-dark/15'}"
-							onclick={handleCopy}
-							disabled={annotakitState.annotationCount === 0}
-						>
-							{#if annotakitState.copyFeedback}
-								<!-- Check icon -->
-								<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-							{:else}
-								<!-- Copy (two squares) icon -->
-								<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
-							{/if}
-						</button>
-					{/snippet}
-				</Tooltip.Trigger>
-				<Tooltip.Content
-					class="z-[100000] rounded border-2 border-annotakit-text/80 bg-annotakit-surface px-2 py-1 text-xs text-annotakit-text shadow-lg dark:border-annotakit-text-dark/30 dark:bg-annotakit-surface-dark dark:text-annotakit-text-dark"
-					sideOffset={8}
-				>
-					{annotakitState.copyFeedback ? 'Copied!' : 'Copy markdown'}
-				</Tooltip.Content>
-			</Tooltip.Root>
+			<TooltipButton
+				label={annotakitState.copyFeedback ? 'Copied!' : 'Copy markdown'}
+				class={annotakitState.annotationCount > 0 ? BTN : BTN_DISABLED}
+				onclick={handleCopy}
+				disabled={annotakitState.annotationCount === 0}
+			>
+				<Icon name={annotakitState.copyFeedback ? 'check' : 'copy'} />
+			</TooltipButton>
 
-			<!-- Delete -->
-			<Tooltip.Root delayDuration={300}>
-				<Tooltip.Trigger>
-					{#snippet child({ props })}
-						<button
-							{...props}
-							class="rounded p-1.5 transition-all duration-300 ease-out {annotakitState.annotationCount > 0
-								? 'text-annotakit-text/50 hover:bg-annotakit-danger hover:text-white dark:text-annotakit-text-dark/50 dark:hover:bg-annotakit-danger dark:hover:text-white'
-								: 'cursor-default text-annotakit-text/15 dark:text-annotakit-text-dark/15'}"
-							onclick={() => annotakitState.clearAll()}
-							disabled={annotakitState.annotationCount === 0}
-						>
-							<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
-						</button>
-					{/snippet}
-				</Tooltip.Trigger>
-				<Tooltip.Content
-					class="z-[100000] rounded border-2 border-annotakit-text/80 bg-annotakit-surface px-2 py-1 text-xs text-annotakit-text shadow-lg dark:border-annotakit-text-dark/30 dark:bg-annotakit-surface-dark dark:text-annotakit-text-dark"
-					sideOffset={8}
-				>
-					Clear all ({annotakitState.annotationCount})
-				</Tooltip.Content>
-			</Tooltip.Root>
+			<TooltipButton
+				label="Clear all ({annotakitState.annotationCount})"
+				class={annotakitState.annotationCount > 0 ? BTN_DANGER : BTN_DISABLED}
+				onclick={() => annotakitState.clearAll()}
+				disabled={annotakitState.annotationCount === 0}
+			>
+				<Icon name="trash" />
+			</TooltipButton>
 
-			<!-- Settings (rightmost) -->
-			<Tooltip.Root delayDuration={300}>
-				<Tooltip.Trigger>
-					{#snippet child({ props })}
-						<button
-							{...props}
-							class="rounded p-1.5 transition-all duration-300 ease-out {showSettings
-								? 'bg-annotakit-text text-white dark:bg-annotakit-text-dark dark:text-annotakit-surface-dark'
-								: 'text-annotakit-text/50 hover:bg-annotakit-text hover:text-white dark:text-annotakit-text-dark/50 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark'}"
-							onclick={() => (showSettings = !showSettings)}
-						>
-							<!-- Gear icon -->
-							<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-						</button>
-					{/snippet}
-				</Tooltip.Trigger>
-				<Tooltip.Content
-					class="z-[100000] rounded border-2 border-annotakit-text/80 bg-annotakit-surface px-2 py-1 text-xs text-annotakit-text shadow-lg dark:border-annotakit-text-dark/30 dark:bg-annotakit-surface-dark dark:text-annotakit-text-dark"
-					sideOffset={8}
-				>
-					Settings
-				</Tooltip.Content>
-			</Tooltip.Root>
+			<TooltipButton
+				label="Settings"
+				class={showSettings ? BTN_ACTIVE : BTN}
+				onclick={() => (showSettings = !showSettings)}
+			>
+				<Icon name="gear" />
+			</TooltipButton>
 		</div>
 
 		<!-- Right: Close -->
@@ -274,11 +172,11 @@
 			<div class="mx-0.5 h-5 w-px bg-annotakit-text/20 dark:bg-annotakit-text-dark/20"></div>
 
 			<button
-				class="rounded p-1.5 text-annotakit-text/50 transition-all duration-300 ease-out hover:bg-annotakit-danger hover:text-white dark:text-annotakit-text-dark/50 dark:hover:bg-annotakit-danger dark:hover:text-white"
+				class="rounded p-1.5 transition-all duration-300 ease-out {BTN_DANGER}"
 				onclick={() => annotakitState.toggleMinimized()}
 				title="Collapse toolbar"
 			>
-				<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+				<Icon name="chevron-right" />
 			</button>
 		</div>
 	</div>

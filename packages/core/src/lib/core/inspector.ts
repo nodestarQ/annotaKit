@@ -43,7 +43,7 @@ function extractAccessibility(el: Element): AccessibilityInfo {
 }
 
 export function inspectElement(el: Element): ElementInfo {
-	const { selector, semantic: _semantic } = generateSelector(el);
+	const { selector } = generateSelector(el);
 	const svelte = detectSvelteComponent(el);
 
 	const textContent = el.textContent?.trim().slice(0, 100) || undefined;

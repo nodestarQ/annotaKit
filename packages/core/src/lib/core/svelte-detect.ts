@@ -19,12 +19,6 @@ export function isSvelteAvailable(): boolean {
 	return !!(window as unknown as { __svelte?: SvelteGlobal }).__svelte;
 }
 
-export function getSvelteVersion(): string | null {
-	if (typeof window === 'undefined') return null;
-	const v = (window as unknown as { __svelte?: SvelteGlobal }).__svelte?.v;
-	return v != null ? String(v) : null;
-}
-
 function deriveComponentName(filePath: string): string {
 	const parts = filePath.split('/');
 	const fileName = parts[parts.length - 1];

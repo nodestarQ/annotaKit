@@ -240,37 +240,29 @@
 	class="pointer-events-none fixed inset-0 z-[99997]"
 	class:cursor-crosshair={annotakitState.isActive}
 >
-	<!-- Hover highlight -->
-	{#if hoverRect && !isDragging && !annotakitState.activeAnnotation}
+	{#snippet highlightBox(rect: DOMRect)}
 		<div
 			data-annotakit="highlight"
 			class="pointer-events-none fixed z-[99998]"
-			style="top: {hoverRect.top}px; left: {hoverRect.left}px; width: {hoverRect.width}px; height: {hoverRect.height}px;"
+			style="top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px;"
 		>
 			<div class="absolute inset-0 rounded-sm border-2 border-annotakit-highlight-border bg-annotakit-highlight"></div>
 		</div>
+	{/snippet}
+
+	<!-- Hover highlight -->
+	{#if hoverRect && !isDragging && !annotakitState.activeAnnotation}
+		{@render highlightBox(hoverRect)}
 	{/if}
 
 	<!-- Highlights for elements inside selection box -->
 	{#each highlightRects as rect}
-		<div
-			data-annotakit="highlight"
-			class="pointer-events-none fixed z-[99998]"
-			style="top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px;"
-		>
-			<div class="absolute inset-0 rounded-sm border-2 border-annotakit-highlight-border bg-annotakit-highlight"></div>
-		</div>
+		{@render highlightBox(rect)}
 	{/each}
 
 	<!-- Active annotation highlight -->
 	{#each activeHighlightRects as rect}
-		<div
-			data-annotakit="highlight"
-			class="pointer-events-none fixed z-[99998]"
-			style="top: {rect.top}px; left: {rect.left}px; width: {rect.width}px; height: {rect.height}px;"
-		>
-			<div class="absolute inset-0 rounded-sm border-2 border-annotakit-highlight-border bg-annotakit-highlight"></div>
-		</div>
+		{@render highlightBox(rect)}
 	{/each}
 
 	<!-- Annotation pins -->

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Dialog } from 'bits-ui';
 	import { annotakitState } from '../state.svelte.js';
-	import { generateMarkdown, copyToClipboard } from '../core/output.js';
-	import type { OutputFormat } from '../types.js';
+	import { generateMarkdown, copyToClipboard, FORMAT_OPTIONS } from '../core/output.js';
+	import Icon from './Icon.svelte';
 
 	interface Props {
 		onOutput?: (markdown: string) => void;
@@ -15,12 +15,6 @@
 	let markdown = $derived(
 		generateMarkdown(annotakitState.annotations, annotakitState.outputFormat)
 	);
-
-	const formats: { value: OutputFormat; label: string }[] = [
-		{ value: 'compact', label: 'Compact' },
-		{ value: 'standard', label: 'Standard' },
-		{ value: 'detailed', label: 'Detailed' }
-	];
 
 	async function handleCopy() {
 		const success = await copyToClipboard(markdown);
@@ -48,13 +42,13 @@
 					Annotation Output
 				</Dialog.Title>
 				<Dialog.Close class="rounded p-1 text-annotakit-text/50 transition-all duration-300 ease-out hover:bg-annotakit-text hover:text-white dark:text-annotakit-text-dark/50 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+					<Icon name="x" size={16} />
 				</Dialog.Close>
 			</div>
 
 			<!-- Format selector -->
 			<div class="flex gap-1 border-b-2 border-annotakit-text/80 px-5 py-2 dark:border-annotakit-text-dark/30">
-				{#each formats as fmt}
+				{#each FORMAT_OPTIONS as fmt}
 					<button
 						class="rounded px-3 py-1 text-xs font-medium transition-all duration-300 ease-out {annotakitState.outputFormat === fmt.value
 							? 'bg-annotakit-text text-white dark:bg-annotakit-text-dark dark:text-annotakit-surface-dark'

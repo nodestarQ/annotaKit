@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
 	import { annotakitState } from '../state.svelte.js';
+	import Icon from './Icon.svelte';
 
 	let annotation = $derived(annotakitState.activeAnnotation);
 
@@ -43,12 +44,11 @@
 			class="group flex w-full shrink-0 cursor-pointer items-center gap-2 border-b-2 border-annotakit-text/80 px-3 py-2 text-left transition-all duration-300 ease-out hover:bg-annotakit-text hover:text-white dark:border-annotakit-text-dark/30 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark"
 			onclick={() => (showDetails = !showDetails)}
 		>
-			<svg
-				xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+			<Icon
+				name="chevron-down"
+				size={12}
 				class="shrink-0 text-annotakit-text/40 transition-all duration-300 ease-out group-hover:text-white dark:text-annotakit-text-dark/40 dark:group-hover:text-annotakit-surface-dark {showDetails ? '' : 'rotate-180'}"
-			>
-				<path d="m6 9 6 6 6-6"/>
-			</svg>
+			/>
 			<span class="flex-1 truncate font-mono text-xs font-medium text-annotakit-text transition-all duration-300 ease-out group-hover:text-white dark:text-annotakit-text-dark dark:group-hover:text-annotakit-surface-dark">
 				{annotation.element.tagName}{#if annotation.element.id}#{annotation.element.id}{/if}
 			</span>
