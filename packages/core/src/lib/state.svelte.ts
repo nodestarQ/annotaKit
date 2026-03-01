@@ -83,11 +83,19 @@ class AnnotakitState {
 		}
 	}
 
+	private activeBeforeMinimize = false;
+
 	toggleMinimized(): void {
-		this.minimized = !this.minimized;
-		if (this.minimized) {
+		if (!this.minimized) {
+			// Collapsing — remember active state
+			this.activeBeforeMinimize = this.active;
 			this.active = false;
 			this.selectedAnnotationId = null;
+			this.minimized = true;
+		} else {
+			// Expanding — restore previous active state
+			this.minimized = false;
+			this.active = this.activeBeforeMinimize;
 		}
 	}
 

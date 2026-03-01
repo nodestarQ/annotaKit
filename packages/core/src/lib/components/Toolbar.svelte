@@ -10,7 +10,9 @@
 	const COMPACT_WIDTH = 272;
 	const EXPANDED_WIDTH = 320;
 
-	let isExpanded = $derived(annotakitState.activeAnnotation !== null);
+	let showSettings = $state(false);
+
+	let isExpanded = $derived(annotakitState.activeAnnotation !== null || showSettings);
 	let targetWidth = $derived(isExpanded ? EXPANDED_WIDTH : COMPACT_WIDTH);
 
 	function telescopeIn(node: HTMLElement, { duration = 250, easing = cubicOut }: { duration?: number; easing?: (t: number) => number } = {}): TransitionConfig {
@@ -43,8 +45,6 @@
 		{ value: 'detailed', label: 'Detailed' }
 	];
 
-	let showSettings = $state(false);
-
 	async function handleCopy() {
 		const md = generateMarkdown(annotakitState.annotations, annotakitState.outputFormat);
 		const ok = await copyToClipboard(md);
@@ -60,12 +60,12 @@
 	{#if showSettings}
 		<div
 			data-annotakit="settings"
-			class="pointer-events-auto fixed right-2 bottom-14 z-[99999] flex w-80 flex-col rounded-xl border border-annotakit-border bg-annotakit-surface shadow-annotakit dark:border-annotakit-border-dark dark:bg-annotakit-surface-dark"
+			class="pointer-events-auto fixed right-2 bottom-14 z-[99999] flex w-80 flex-col rounded-lg border-2 border-annotakit-text/80 bg-annotakit-surface shadow-annotakit dark:border-annotakit-text-dark/30 dark:bg-annotakit-surface-dark"
 		>
-			<div class="flex shrink-0 items-center justify-between border-b border-annotakit-border px-3 py-2 dark:border-annotakit-border-dark">
+			<div class="flex shrink-0 items-center justify-between border-b-2 border-annotakit-text/80 px-3 py-2 dark:border-annotakit-text-dark/30">
 				<span class="text-xs font-medium text-annotakit-text dark:text-annotakit-text-dark">Settings</span>
 				<button
-					class="text-annotakit-text/50 transition-colors hover:text-annotakit-text dark:text-annotakit-text-dark/50 dark:hover:text-annotakit-text-dark"
+					class="rounded p-1 text-annotakit-text/50 transition-all duration-300 ease-out hover:bg-annotakit-text hover:text-white dark:text-annotakit-text-dark/50 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark"
 					onclick={() => (showSettings = false)}
 					title="Close settings"
 				>
@@ -80,9 +80,9 @@
 					<div class="flex gap-1">
 						{#each formatOptions as fmt}
 							<button
-								class="rounded-lg px-2.5 py-1 text-xs transition-colors {annotakitState.outputFormat === fmt.value
-									? 'bg-annotakit-primary text-white'
-									: 'text-annotakit-text/70 hover:bg-annotakit-primary/10 hover:text-annotakit-text dark:text-annotakit-text-dark/70 dark:hover:text-annotakit-text-dark'}"
+								class="rounded px-2.5 py-1 text-xs transition-all duration-300 ease-out {annotakitState.outputFormat === fmt.value
+									? 'bg-annotakit-text text-white dark:bg-annotakit-text-dark dark:text-annotakit-surface-dark'
+									: 'text-annotakit-text/70 hover:bg-annotakit-text hover:text-white dark:text-annotakit-text-dark/70 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark'}"
 								onclick={() => (annotakitState.outputFormat = fmt.value)}
 							>
 								{fmt.label}
@@ -97,7 +97,7 @@
 	<!-- Toolbar -->
 	<div
 		data-annotakit="toolbar"
-		class="fixed right-2 bottom-2 z-[99999] flex select-none items-center gap-1 rounded-xl border border-annotakit-border bg-annotakit-surface px-2 py-1.5 shadow-annotakit transition-[width] duration-200 ease-out dark:border-annotakit-border-dark dark:bg-annotakit-surface-dark"
+		class="fixed right-2 bottom-2 z-[99999] flex select-none items-center gap-1 rounded-lg border-2 border-annotakit-text/80 bg-annotakit-surface px-2 py-1.5 shadow-annotakit transition-[width] duration-200 ease-out dark:border-annotakit-text-dark/30 dark:bg-annotakit-surface-dark"
 		style="width: {targetWidth}px;"
 		role="toolbar"
 		tabindex="0"
@@ -112,7 +112,7 @@
 					{#snippet child({ props })}
 						<button
 							{...props}
-							class="relative rounded-lg px-2.5 py-1.5 text-xs font-medium text-annotakit-text/70 transition-colors hover:bg-annotakit-primary/10 hover:text-annotakit-text dark:text-annotakit-text-dark/70 dark:hover:text-annotakit-text-dark"
+							class="relative rounded p-1.5 text-xs font-medium text-annotakit-text/70 transition-all duration-300 ease-out hover:bg-annotakit-text hover:text-white dark:text-annotakit-text-dark/70 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark"
 							onclick={() => (annotakitState.showOutputDialog = true)}
 						>
 							<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
@@ -125,14 +125,14 @@
 					{/snippet}
 				</Tooltip.Trigger>
 				<Tooltip.Content
-					class="z-[100000] rounded-lg bg-annotakit-text px-2 py-1 text-xs text-white shadow-lg dark:bg-annotakit-text-dark dark:text-annotakit-text"
-					sideOffset={6}
+					class="z-[100000] rounded border-2 border-annotakit-text/80 bg-annotakit-surface px-2 py-1 text-xs text-annotakit-text shadow-lg dark:border-annotakit-text-dark/30 dark:bg-annotakit-surface-dark dark:text-annotakit-text-dark"
+					sideOffset={8}
 				>
 					Output ({annotakitState.annotationCount})
 				</Tooltip.Content>
 			</Tooltip.Root>
 
-			<div class="mx-0.5 h-5 w-px bg-annotakit-border dark:bg-annotakit-border-dark"></div>
+			<div class="mx-0.5 h-5 w-px bg-annotakit-text/20 dark:bg-annotakit-text-dark/20"></div>
 		</div>
 
 		<!-- Center: Freeze | Edit | Copy | Delete | Settings (left to right) -->
@@ -143,9 +143,9 @@
 					{#snippet child({ props })}
 						<button
 							{...props}
-							class="rounded-lg px-2 py-1.5 transition-colors {annotakitState.frozen
-								? 'bg-annotakit-warning/20 text-annotakit-warning'
-								: 'text-annotakit-text/50 hover:bg-annotakit-primary/10 hover:text-annotakit-text dark:text-annotakit-text-dark/50 dark:hover:text-annotakit-text-dark'}"
+							class="rounded p-1.5 transition-all duration-300 ease-out {annotakitState.frozen
+								? 'bg-annotakit-warning text-white'
+								: 'text-annotakit-text/50 hover:bg-annotakit-text hover:text-white dark:text-annotakit-text-dark/50 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark'}"
 							onclick={() => (annotakitState.frozen = !annotakitState.frozen)}
 						>
 							{#if annotakitState.frozen}
@@ -159,8 +159,8 @@
 					{/snippet}
 				</Tooltip.Trigger>
 				<Tooltip.Content
-					class="z-[100000] rounded-lg bg-annotakit-text px-2 py-1 text-xs text-white shadow-lg dark:bg-annotakit-text-dark dark:text-annotakit-text"
-					sideOffset={6}
+					class="z-[100000] rounded border-2 border-annotakit-text/80 bg-annotakit-surface px-2 py-1 text-xs text-annotakit-text shadow-lg dark:border-annotakit-text-dark/30 dark:bg-annotakit-surface-dark dark:text-annotakit-text-dark"
+					sideOffset={8}
 				>
 					{annotakitState.frozen ? 'Resume animations' : 'Freeze animations'}
 				</Tooltip.Content>
@@ -172,9 +172,9 @@
 					{#snippet child({ props })}
 						<button
 							{...props}
-							class="rounded-lg px-2 py-1.5 transition-colors {annotakitState.active
-								? 'bg-annotakit-primary text-white'
-								: 'text-annotakit-text/50 hover:bg-annotakit-primary/10 hover:text-annotakit-text dark:text-annotakit-text-dark/50 dark:hover:text-annotakit-text-dark'}"
+							class="rounded p-1.5 transition-all duration-300 ease-out {annotakitState.active
+								? 'bg-annotakit-text text-white dark:bg-annotakit-text-dark dark:text-annotakit-surface-dark'
+								: 'text-annotakit-text/50 hover:bg-annotakit-text hover:text-white dark:text-annotakit-text-dark/50 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark'}"
 							onclick={() => annotakitState.toggleActive()}
 						>
 							<!-- Pencil icon -->
@@ -183,8 +183,8 @@
 					{/snippet}
 				</Tooltip.Trigger>
 				<Tooltip.Content
-					class="z-[100000] rounded-lg bg-annotakit-text px-2 py-1 text-xs text-white shadow-lg dark:bg-annotakit-text-dark dark:text-annotakit-text"
-					sideOffset={6}
+					class="z-[100000] rounded border-2 border-annotakit-text/80 bg-annotakit-surface px-2 py-1 text-xs text-annotakit-text shadow-lg dark:border-annotakit-text-dark/30 dark:bg-annotakit-surface-dark dark:text-annotakit-text-dark"
+					sideOffset={8}
 				>
 					{annotakitState.active ? 'Deactivate' : 'Activate'}
 				</Tooltip.Content>
@@ -196,9 +196,9 @@
 					{#snippet child({ props })}
 						<button
 							{...props}
-							class="rounded-lg px-2 py-1.5 transition-colors {annotakitState.annotationCount > 0
-								? 'text-annotakit-text/50 hover:bg-annotakit-primary/10 hover:text-annotakit-text dark:text-annotakit-text-dark/50 dark:hover:text-annotakit-text-dark'
-								: 'cursor-default text-annotakit-text/20 dark:text-annotakit-text-dark/20'}"
+							class="rounded p-1.5 transition-all duration-300 ease-out {annotakitState.annotationCount > 0
+								? 'text-annotakit-text/50 hover:bg-annotakit-text hover:text-white dark:text-annotakit-text-dark/50 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark'
+								: 'cursor-default text-annotakit-text/15 dark:text-annotakit-text-dark/15'}"
 							onclick={handleCopy}
 							disabled={annotakitState.annotationCount === 0}
 						>
@@ -213,8 +213,8 @@
 					{/snippet}
 				</Tooltip.Trigger>
 				<Tooltip.Content
-					class="z-[100000] rounded-lg bg-annotakit-text px-2 py-1 text-xs text-white shadow-lg dark:bg-annotakit-text-dark dark:text-annotakit-text"
-					sideOffset={6}
+					class="z-[100000] rounded border-2 border-annotakit-text/80 bg-annotakit-surface px-2 py-1 text-xs text-annotakit-text shadow-lg dark:border-annotakit-text-dark/30 dark:bg-annotakit-surface-dark dark:text-annotakit-text-dark"
+					sideOffset={8}
 				>
 					{annotakitState.copyFeedback ? 'Copied!' : 'Copy markdown'}
 				</Tooltip.Content>
@@ -226,9 +226,9 @@
 					{#snippet child({ props })}
 						<button
 							{...props}
-							class="rounded-lg px-2 py-1.5 transition-colors {annotakitState.annotationCount > 0
-								? 'text-annotakit-text/50 hover:bg-annotakit-danger/10 hover:text-annotakit-danger dark:text-annotakit-text-dark/50 dark:hover:text-annotakit-danger'
-								: 'cursor-default text-annotakit-text/20 dark:text-annotakit-text-dark/20'}"
+							class="rounded p-1.5 transition-all duration-300 ease-out {annotakitState.annotationCount > 0
+								? 'text-annotakit-text/50 hover:bg-annotakit-danger hover:text-white dark:text-annotakit-text-dark/50 dark:hover:bg-annotakit-danger dark:hover:text-white'
+								: 'cursor-default text-annotakit-text/15 dark:text-annotakit-text-dark/15'}"
 							onclick={() => annotakitState.clearAll()}
 							disabled={annotakitState.annotationCount === 0}
 						>
@@ -237,8 +237,8 @@
 					{/snippet}
 				</Tooltip.Trigger>
 				<Tooltip.Content
-					class="z-[100000] rounded-lg bg-annotakit-text px-2 py-1 text-xs text-white shadow-lg dark:bg-annotakit-text-dark dark:text-annotakit-text"
-					sideOffset={6}
+					class="z-[100000] rounded border-2 border-annotakit-text/80 bg-annotakit-surface px-2 py-1 text-xs text-annotakit-text shadow-lg dark:border-annotakit-text-dark/30 dark:bg-annotakit-surface-dark dark:text-annotakit-text-dark"
+					sideOffset={8}
 				>
 					Clear all ({annotakitState.annotationCount})
 				</Tooltip.Content>
@@ -250,7 +250,9 @@
 					{#snippet child({ props })}
 						<button
 							{...props}
-							class="rounded-lg px-2 py-1.5 text-annotakit-text/50 transition-colors hover:bg-annotakit-primary/10 hover:text-annotakit-text dark:text-annotakit-text-dark/50 dark:hover:text-annotakit-text-dark {showSettings ? 'bg-annotakit-primary/10 text-annotakit-text dark:text-annotakit-text-dark' : ''}"
+							class="rounded p-1.5 transition-all duration-300 ease-out {showSettings
+								? 'bg-annotakit-text text-white dark:bg-annotakit-text-dark dark:text-annotakit-surface-dark'
+								: 'text-annotakit-text/50 hover:bg-annotakit-text hover:text-white dark:text-annotakit-text-dark/50 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark'}"
 							onclick={() => (showSettings = !showSettings)}
 						>
 							<!-- Gear icon -->
@@ -259,8 +261,8 @@
 					{/snippet}
 				</Tooltip.Trigger>
 				<Tooltip.Content
-					class="z-[100000] rounded-lg bg-annotakit-text px-2 py-1 text-xs text-white shadow-lg dark:bg-annotakit-text-dark dark:text-annotakit-text"
-					sideOffset={6}
+					class="z-[100000] rounded border-2 border-annotakit-text/80 bg-annotakit-surface px-2 py-1 text-xs text-annotakit-text shadow-lg dark:border-annotakit-text-dark/30 dark:bg-annotakit-surface-dark dark:text-annotakit-text-dark"
+					sideOffset={8}
 				>
 					Settings
 				</Tooltip.Content>
@@ -269,10 +271,10 @@
 
 		<!-- Right: Close -->
 		<div class="flex shrink-0 items-center gap-1">
-			<div class="mx-0.5 h-5 w-px bg-annotakit-border dark:bg-annotakit-border-dark"></div>
+			<div class="mx-0.5 h-5 w-px bg-annotakit-text/20 dark:bg-annotakit-text-dark/20"></div>
 
 			<button
-				class="rounded-lg px-2 py-1.5 text-annotakit-text/50 transition-colors hover:bg-annotakit-danger/10 hover:text-annotakit-danger dark:text-annotakit-text-dark/50 dark:hover:text-annotakit-danger"
+				class="rounded p-1.5 text-annotakit-text/50 transition-all duration-300 ease-out hover:bg-annotakit-danger hover:text-white dark:text-annotakit-text-dark/50 dark:hover:bg-annotakit-danger dark:hover:text-white"
 				onclick={() => annotakitState.toggleMinimized()}
 				title="Collapse toolbar"
 			>
@@ -281,10 +283,10 @@
 		</div>
 	</div>
 {:else}
-	<!-- Minimized state: square button with rounded corners -->
+	<!-- Minimized state -->
 	<button
 		data-annotakit="toolbar-minimized"
-		class="fixed right-2 bottom-2 z-[99999] flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-annotakit-border bg-annotakit-surface text-annotakit-text/50 shadow-annotakit transition-colors hover:bg-annotakit-primary/10 hover:text-annotakit-primary dark:border-annotakit-border-dark dark:bg-annotakit-surface-dark dark:text-annotakit-text-dark/50 dark:hover:text-annotakit-primary"
+		class="fixed right-2 bottom-2 z-[99999] flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg border-2 border-annotakit-text/80 bg-annotakit-surface text-annotakit-text/50 shadow-annotakit transition-all duration-300 ease-out hover:bg-annotakit-text hover:text-white dark:border-annotakit-text-dark/30 dark:bg-annotakit-surface-dark dark:text-annotakit-text-dark/50 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark"
 		onclick={() => annotakitState.toggleMinimized()}
 		title="Restore Annotakit toolbar"
 	>

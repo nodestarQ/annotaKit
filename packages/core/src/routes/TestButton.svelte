@@ -10,14 +10,14 @@
 	let { variant = 'primary', disabled = false, children }: Props = $props();
 
 	const variantClasses: Record<string, string> = {
-		primary: 'bg-blue-600 text-white hover:bg-blue-700',
-		secondary: 'bg-gray-200 text-gray-800 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200',
-		danger: 'bg-red-600 text-white hover:bg-red-700'
+		primary: 'border-2 border-annotakit-text/80 bg-annotakit-text text-white hover:bg-annotakit-primary dark:border-annotakit-text-dark/30 dark:bg-annotakit-text-dark dark:text-annotakit-surface-dark dark:hover:bg-annotakit-primary',
+		secondary: 'border-2 border-annotakit-text/80 text-annotakit-text/70 hover:bg-annotakit-text hover:text-white dark:border-annotakit-text-dark/30 dark:text-annotakit-text-dark/70 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark',
+		danger: 'border-2 border-annotakit-text/80 bg-annotakit-danger text-white hover:opacity-90 dark:border-annotakit-text-dark/30'
 	};
 </script>
 
 <button
-	class="rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 {variantClasses[variant]}"
+	class="rounded px-4 py-2 text-sm font-medium transition-all duration-300 ease-out disabled:cursor-not-allowed disabled:opacity-50 {variantClasses[variant]}"
 	{disabled}
 >
 	{@render children()}

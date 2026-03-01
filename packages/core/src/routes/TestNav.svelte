@@ -7,11 +7,11 @@
 	];
 </script>
 
-<nav class="flex items-center gap-1 rounded-xl border border-gray-200 bg-white p-1 dark:border-gray-700 dark:bg-gray-800" aria-label="Main navigation">
+<nav class="flex items-center gap-1 rounded-lg border-2 border-annotakit-text/80 bg-white p-1 dark:border-annotakit-text-dark/30 dark:bg-annotakit-surface-dark" aria-label="Main navigation">
 	{#each links as link}
 		<a
 			href={link.href}
-			class="rounded-lg px-4 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-100"
+			class="rounded px-4 py-2 text-sm font-medium text-annotakit-text/50 transition-all duration-300 ease-out hover:bg-annotakit-text hover:text-white dark:text-annotakit-text-dark/50 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark"
 		>
 			{link.label}
 		</a>
