@@ -1,0 +1,20 @@
+/* Annotakit distributable theme tokens — import in consumer's app.css */
+@theme {
+	--color-annotakit-primary: oklch(0.65 0.2 250);
+	--color-annotakit-primary-light: oklch(0.8 0.15 250);
+	--color-annotakit-primary-dark: oklch(0.5 0.2 250);
+	--color-annotakit-accent: oklch(0.7 0.18 160);
+	--color-annotakit-warning: oklch(0.75 0.18 75);
+	--color-annotakit-danger: oklch(0.65 0.2 25);
+	--color-annotakit-surface: oklch(0.98 0.005 250);
+	--color-annotakit-surface-dark: oklch(0.2 0.02 250);
+	--color-annotakit-text: oklch(0.15 0.01 250);
+	--color-annotakit-text-dark: oklch(0.92 0.01 250);
+	--color-annotakit-border: oklch(0.85 0.01 250);
+	--color-annotakit-border-dark: oklch(0.35 0.02 250);
+	--color-annotakit-highlight: oklch(0.65 0.2 250 / 0.15);
+	--color-annotakit-highlight-border: oklch(0.65 0.2 250 / 0.6);
+	--shadow-annotakit: 0 4px 24px oklch(0 0 0 / 0.12);
+	--radius-annotakit: 0.5rem;
+	--radius-annotakit-lg: 0.75rem;
+}

@@ -1,0 +1,8 @@
+{
+  "name": "@annotakit/docs",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Annotakit documentation site (future)",
+  "type": "module",
+  "license": "MIT"
+}

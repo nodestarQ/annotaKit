@@ -1,0 +1,8 @@
+{
+  "name": "@annotakit/mcp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MCP server for Annotakit (future)",
+  "type": "module",
+  "license": "MIT"
+}

@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm -C packages/core dev",
+    "build": "pnpm -C packages/core package",
+    "check": "pnpm -C packages/core check"
+  }
+}
