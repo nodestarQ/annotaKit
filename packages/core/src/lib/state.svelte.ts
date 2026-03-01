@@ -5,7 +5,6 @@
 
 import type {
 	Annotation,
-	AnnotakitMode,
 	AnnotakitPosition,
 	AnnotakitTheme,
 	OutputFormat
@@ -14,7 +13,7 @@ import { loadAnnotations, saveAnnotations, clearAnnotations } from './core/annot
 
 class AnnotakitState {
 	// Core
-	mode = $state<AnnotakitMode>('idle');
+	active = $state(true);
 	enabled = $state(true);
 	minimized = $state(false);
 	annotations = $state<Annotation[]>([]);
@@ -27,11 +26,9 @@ class AnnotakitState {
 	retentionDays = $state(7);
 
 	// Transient UI
-	hoveredElement = $state<Element | null>(null);
 	selectedAnnotationId = $state<string | null>(null);
-	toolbarPosition = $state({ x: 0, y: 0 });
-	isDragging = $state(false);
 	showOutputDialog = $state(false);
+	copyFeedback = $state(false);
 
 	// Derived
 	activeAnnotation = $derived(
@@ -40,7 +37,7 @@ class AnnotakitState {
 
 	annotationCount = $derived(this.annotations.length);
 
-	isActive = $derived(this.enabled && !this.minimized);
+	isActive = $derived(this.enabled && this.active);
 
 	// Methods
 	addAnnotation(annotation: Annotation): void {
@@ -78,10 +75,9 @@ class AnnotakitState {
 		saveAnnotations(this.storageKey, this.annotations);
 	}
 
-	setMode(mode: AnnotakitMode): void {
-		this.mode = mode;
-		this.hoveredElement = null;
-		if (mode === 'idle') {
+	toggleActive(): void {
+		this.active = !this.active;
+		if (!this.active) {
 			this.selectedAnnotationId = null;
 		}
 	}
@@ -89,7 +85,7 @@ class AnnotakitState {
 	toggleMinimized(): void {
 		this.minimized = !this.minimized;
 		if (this.minimized) {
-			this.setMode('idle');
+			this.selectedAnnotationId = null;
 		}
 	}
 

@@ -7,9 +7,13 @@ import type { Annotation, OutputFormat } from '../types.js';
 
 function formatCompact(annotation: Annotation, index: number): string {
 	const parts = [`${index + 1}.`];
-	parts.push(`\`${annotation.element.selector}\``);
-	if (annotation.element.svelte) {
-		parts.push(`(${annotation.element.svelte.name})`);
+	if (annotation.mode === 'multi' && annotation.elements && annotation.elements.length > 1) {
+		parts.push(`[${annotation.elements.map((el) => `\`${el.selector}\``).join(', ')}]`);
+	} else {
+		parts.push(`\`${annotation.element.selector}\``);
+		if (annotation.element.svelte) {
+			parts.push(`(${annotation.element.svelte.name})`);
+		}
 	}
 	if (annotation.comment) {
 		parts.push(`— ${annotation.comment}`);
@@ -24,10 +28,18 @@ function formatStandard(annotation: Annotation, index: number): string {
 	const lines: string[] = [];
 	lines.push(`### ${index + 1}. ${annotation.element.tagName}${annotation.element.id ? `#${annotation.element.id}` : ''}`);
 	lines.push('');
-	lines.push(`- **Selector:** \`${annotation.element.selector}\``);
 
-	if (annotation.element.svelte) {
-		lines.push(`- **Component:** ${annotation.element.svelte.name} (\`${annotation.element.svelte.file}\`)`);
+	if (annotation.mode === 'multi' && annotation.elements && annotation.elements.length > 1) {
+		lines.push(`- **Elements (${annotation.elements.length}):**`);
+		for (const el of annotation.elements) {
+			const comp = el.svelte ? ` (${el.svelte.name})` : '';
+			lines.push(`  - \`${el.selector}\`${comp}`);
+		}
+	} else {
+		lines.push(`- **Selector:** \`${annotation.element.selector}\``);
+		if (annotation.element.svelte) {
+			lines.push(`- **Component:** ${annotation.element.svelte.name} (\`${annotation.element.svelte.file}\`)`);
+		}
 	}
 
 	if (annotation.textSelection) {
@@ -53,13 +65,21 @@ function formatDetailed(annotation: Annotation, index: number): string {
 	const lines: string[] = [];
 	lines.push(`### ${index + 1}. ${annotation.element.tagName}${annotation.element.id ? `#${annotation.element.id}` : ''}`);
 	lines.push('');
-	lines.push(`- **Selector:** \`${annotation.element.selector}\``);
 
-	if (annotation.element.svelte) {
-		const sv = annotation.element.svelte;
-		lines.push(`- **Component:** ${sv.name} (\`${sv.file}:${sv.line ?? ''}\`)`);
-		if (sv.chain.length > 0) {
-			lines.push(`- **Component chain:** ${sv.chain.join(' > ')}`);
+	if (annotation.mode === 'multi' && annotation.elements && annotation.elements.length > 1) {
+		lines.push(`- **Elements (${annotation.elements.length}):**`);
+		for (const el of annotation.elements) {
+			const comp = el.svelte ? ` — ${el.svelte.name} (\`${el.svelte.file}\`)` : '';
+			lines.push(`  - \`${el.selector}\`${comp}`);
+		}
+	} else {
+		lines.push(`- **Selector:** \`${annotation.element.selector}\``);
+		if (annotation.element.svelte) {
+			const sv = annotation.element.svelte;
+			lines.push(`- **Component:** ${sv.name} (\`${sv.file}:${sv.line ?? ''}\`)`);
+			if (sv.chain.length > 0) {
+				lines.push(`- **Component chain:** ${sv.chain.join(' > ')}`);
+			}
 		}
 	}
 

@@ -3,26 +3,6 @@
 
 	let annotation = $derived(annotakitState.activeAnnotation);
 
-	const toolbarHeight = 48;
-	const gap = 8;
-
-	let toolbarInLowerHalf = $derived(
-		annotakitState.toolbarPosition.y > (typeof window !== 'undefined' ? window.innerHeight / 2 : 360)
-	);
-
-	let panelStyle = $derived.by(() => {
-		const x = annotakitState.toolbarPosition.x;
-		const y = annotakitState.toolbarPosition.y;
-		if (toolbarInLowerHalf) {
-			// Render above toolbar
-			return `left: ${x}px; bottom: calc(100vh - ${y}px + ${gap}px); max-height: calc(${y}px - ${gap * 2}px);`;
-		} else {
-			// Render below toolbar
-			const top = y + toolbarHeight + gap;
-			return `left: ${x}px; top: ${top}px; max-height: calc(100vh - ${top}px - ${gap}px);`;
-		}
-	});
-
 	let commentValue = $state('');
 
 	$effect(() => {
@@ -53,8 +33,8 @@
 {#if annotation}
 	<div
 		data-annotakit="panel"
-		class="pointer-events-auto fixed z-[99999] flex w-80 flex-col rounded-xl border border-annotakit-border bg-annotakit-surface shadow-annotakit dark:border-annotakit-border-dark dark:bg-annotakit-surface-dark"
-		style={panelStyle}
+		class="pointer-events-auto fixed right-2 bottom-14 z-[99999] flex w-80 flex-col rounded-xl border border-annotakit-border bg-annotakit-surface shadow-annotakit dark:border-annotakit-border-dark dark:bg-annotakit-surface-dark"
+		style="max-height: calc(100vh - 72px);"
 	>
 		<div class="flex shrink-0 items-center justify-between border-b border-annotakit-border px-3 py-2 dark:border-annotakit-border-dark">
 			<span class="font-mono text-xs font-medium text-annotakit-text dark:text-annotakit-text-dark">
@@ -70,25 +50,46 @@
 		</div>
 
 		<div class="space-y-2 overflow-y-auto p-3">
-			<!-- Selector -->
-			<div>
-				<div class="mb-0.5 text-[10px] font-medium uppercase tracking-wider text-annotakit-text/50 dark:text-annotakit-text-dark/50">Selector</div>
-				<code class="block truncate rounded bg-annotakit-primary/10 px-2 py-1 font-mono text-xs text-annotakit-primary dark:bg-annotakit-primary/20">
-					{annotation.element.selector}
-				</code>
-			</div>
-
-			<!-- Svelte component -->
-			{#if annotation.element.svelte}
+			<!-- Multi-element list -->
+			{#if annotation.elements && annotation.elements.length > 1}
 				<div>
-					<div class="mb-0.5 text-[10px] font-medium uppercase tracking-wider text-annotakit-text/50 dark:text-annotakit-text-dark/50">Component</div>
-					<div class="font-mono text-xs text-annotakit-accent">
-						{annotation.element.svelte.name}
-						<span class="text-annotakit-text/40 dark:text-annotakit-text-dark/40">
-							{annotation.element.svelte.file}
-						</span>
+					<div class="mb-0.5 text-[10px] font-medium uppercase tracking-wider text-annotakit-text/50 dark:text-annotakit-text-dark/50">Elements ({annotation.elements.length})</div>
+					<div class="space-y-1">
+						{#each annotation.elements as el}
+							<div class="rounded bg-annotakit-primary/10 px-2 py-1 dark:bg-annotakit-primary/20">
+								<code class="block truncate font-mono text-xs text-annotakit-primary">
+									{el.selector}
+								</code>
+								{#if el.svelte}
+									<div class="font-mono text-[10px] text-annotakit-accent">
+										{el.svelte.name}
+									</div>
+								{/if}
+							</div>
+						{/each}
 					</div>
 				</div>
+			{:else}
+				<!-- Single element selector -->
+				<div>
+					<div class="mb-0.5 text-[10px] font-medium uppercase tracking-wider text-annotakit-text/50 dark:text-annotakit-text-dark/50">Selector</div>
+					<code class="block truncate rounded bg-annotakit-primary/10 px-2 py-1 font-mono text-xs text-annotakit-primary dark:bg-annotakit-primary/20">
+						{annotation.element.selector}
+					</code>
+				</div>
+
+				<!-- Svelte component -->
+				{#if annotation.element.svelte}
+					<div>
+						<div class="mb-0.5 text-[10px] font-medium uppercase tracking-wider text-annotakit-text/50 dark:text-annotakit-text-dark/50">Component</div>
+						<div class="font-mono text-xs text-annotakit-accent">
+							{annotation.element.svelte.name}
+							<span class="text-annotakit-text/40 dark:text-annotakit-text-dark/40">
+								{annotation.element.svelte.file}
+							</span>
+						</div>
+					</div>
+				{/if}
 			{/if}
 
 			<!-- Text selection -->

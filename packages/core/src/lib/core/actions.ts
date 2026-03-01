@@ -7,19 +7,10 @@ import { inspectElement } from './inspector.js';
 import { captureTextSelection } from './text-selection.js';
 import { createAnnotation } from './annotation.js';
 
-export function handleInspectClick(element: Element): Annotation {
-	const info = inspectElement(element);
-	return createAnnotation({
-		mode: 'inspect',
-		element: info,
-		comment: ''
-	});
-}
-
 export function handleAnnotateClick(element: Element): Annotation {
 	const info = inspectElement(element);
 	return createAnnotation({
-		mode: 'annotate',
+		mode: 'element',
 		element: info,
 		comment: ''
 	});
@@ -35,9 +26,19 @@ export function handleTextSelection(): Annotation | null {
 
 	const info = inspectElement(anchorEl);
 	return createAnnotation({
-		mode: 'select',
+		mode: 'text',
 		element: info,
 		textSelection: selection,
+		comment: ''
+	});
+}
+
+export function handleMultiElementClick(elements: Element[]): Annotation {
+	const elementInfos = elements.map((el) => inspectElement(el));
+	return createAnnotation({
+		mode: 'multi',
+		element: elementInfos[0],
+		elements: elementInfos,
 		comment: ''
 	});
 }

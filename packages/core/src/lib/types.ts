@@ -1,4 +1,4 @@
-export type AnnotakitMode = 'idle' | 'inspect' | 'annotate' | 'select';
+export type AnnotakitMode = 'element' | 'text' | 'multi';
 
 export type AnnotakitPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
 
@@ -61,8 +61,9 @@ export interface TextSelectionInfo {
 export interface Annotation {
 	id: string;
 	timestamp: number;
-	mode: 'inspect' | 'annotate' | 'select';
+	mode: AnnotakitMode;
 	element: ElementInfo;
+	elements?: ElementInfo[];
 	textSelection?: TextSelectionInfo;
 	comment: string;
 }
