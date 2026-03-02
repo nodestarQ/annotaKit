@@ -6,4 +6,4 @@
 </script>
 
 {@render children()}
-<Annotakit position="bottom-right" theme="dark" />
+<Annotakit position="bottom-right" theme="dark" minimized={true} />

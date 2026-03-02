@@ -17,21 +17,25 @@
 	const BTN_DANGER = 'text-annotakit-text/50 hover:bg-annotakit-danger hover:text-white';
 
 	let showSettings = $state(false);
+	let showClearConfirm = $state(false);
 
-	let isExpanded = $derived(annotakitState.activeAnnotation !== null || showSettings);
+	function closePanels() {
+		showSettings = false;
+		showClearConfirm = false;
+	}
+
+	// Close panels when user starts annotating
+	$effect(() => {
+		if (annotakitState.activeAnnotation) closePanels();
+	});
+
+	let isExpanded = $derived(annotakitState.activeAnnotation !== null || showSettings || showClearConfirm);
 	let targetWidth = $derived(isExpanded ? EXPANDED_WIDTH : COMPACT_WIDTH);
 
 	// Position classes derived from state
 	let positionClasses = $derived.by(() => {
 		const [v, h] = annotakitState.position.split('-');
 		const vert = v === 'top' ? 'top-2' : 'bottom-2';
-		const horiz = h === 'left' ? 'left-2' : h === 'right' ? 'right-2' : 'left-1/2 -translate-x-1/2';
-		return `${vert} ${horiz}`;
-	});
-
-	let panelPositionClasses = $derived.by(() => {
-		const [v, h] = annotakitState.position.split('-');
-		const vert = v === 'top' ? 'top-14' : 'bottom-14';
 		const horiz = h === 'left' ? 'left-2' : h === 'right' ? 'right-2' : 'left-1/2 -translate-x-1/2';
 		return `${vert} ${horiz}`;
 	});
@@ -75,7 +79,7 @@
 	{#if showSettings}
 		<div
 			data-annotakit="settings"
-			class="pointer-events-auto fixed {panelPositionClasses} z-[99999] flex w-80 flex-col rounded-lg border-2 border-annotakit-stroke bg-annotakit-surface shadow-annotakit"
+			class="pointer-events-auto fixed {annotakitState.panelPositionClasses} z-[99999] flex w-80 flex-col rounded-lg border-2 border-annotakit-stroke bg-annotakit-surface shadow-annotakit"
 		>
 			<div class="flex shrink-0 items-center justify-between border-b-2 border-annotakit-stroke px-3 py-2">
 				<span class="text-xs font-medium text-annotakit-text">Settings</span>
@@ -91,10 +95,10 @@
 			<div class="space-y-2 p-3">
 				<div>
 					<div class="mb-1 text-[10px] font-medium uppercase tracking-wider text-annotakit-text/50">Output format</div>
-					<div class="flex gap-1">
+					<div class="flex gap-2">
 						{#each FORMAT_OPTIONS as fmt}
 							<button
-								class="rounded px-2.5 py-1 text-xs transition-all duration-300 ease-out {annotakitState.outputFormat === fmt.value
+								class="flex-1 rounded border-2 border-annotakit-stroke px-3 py-1.5 text-xs font-medium transition-all duration-300 ease-out {annotakitState.outputFormat === fmt.value
 									? BTN_ACTIVE
 									: 'text-annotakit-text/70 hover:bg-annotakit-text hover:text-annotakit-surface'}"
 								onclick={() => (annotakitState.outputFormat = fmt.value)}
@@ -103,6 +107,45 @@
 							</button>
 						{/each}
 					</div>
+				</div>
+			</div>
+		</div>
+	{/if}
+
+	<!-- Clear confirmation card -->
+	{#if showClearConfirm}
+		<div
+			data-annotakit="clear-confirm"
+			class="pointer-events-auto fixed {annotakitState.panelPositionClasses} z-[99999] flex w-80 flex-col rounded-lg border-2 border-annotakit-stroke bg-annotakit-surface shadow-annotakit"
+		>
+			<div class="flex shrink-0 items-center justify-between border-b-2 border-annotakit-stroke px-3 py-2">
+				<span class="text-xs font-medium text-annotakit-text">Clear annotations?</span>
+				<button
+					class="rounded p-1 {BTN}"
+					onclick={() => (showClearConfirm = false)}
+					title="Close"
+				>
+					<Icon name="x" />
+				</button>
+			</div>
+
+			<div class="space-y-2 p-3">
+				<p class="text-xs text-annotakit-text/70">
+					This will remove all <strong class="text-annotakit-text">{annotakitState.annotationCount}</strong> annotations.
+				</p>
+				<div class="flex gap-2">
+					<button
+						class="flex-1 rounded border-2 border-annotakit-stroke px-3 py-1.5 text-xs font-medium text-annotakit-text/70 transition-all duration-300 ease-out hover:bg-annotakit-text hover:text-annotakit-surface"
+						onclick={() => (showClearConfirm = false)}
+					>
+						Cancel
+					</button>
+					<button
+						class="flex-1 rounded border-2 border-annotakit-stroke bg-annotakit-danger px-3 py-1.5 text-xs font-medium text-white transition-all duration-300 ease-out hover:opacity-80"
+						onclick={() => { annotakitState.clearAll(); showClearConfirm = false; }}
+					>
+						Clear all
+					</button>
 				</div>
 			</div>
 		</div>
@@ -148,11 +191,11 @@
 			</TooltipButton>
 
 			<TooltipButton
-				label={annotakitState.active ? 'Deactivate' : 'Activate'}
-				class={annotakitState.active ? BTN_ACTIVE : BTN}
-				onclick={() => annotakitState.toggleActive()}
+				label={annotakitState.visible ? 'Hide annotations' : 'Show annotations'}
+				class={annotakitState.visible ? BTN_ACTIVE : BTN}
+				onclick={() => annotakitState.toggleVisible()}
 			>
-				<Icon name="pencil" />
+				<Icon name={annotakitState.visible ? 'eye' : 'eye-off'} />
 			</TooltipButton>
 
 			<TooltipButton
@@ -167,7 +210,7 @@
 			<TooltipButton
 				label="Clear all ({annotakitState.annotationCount})"
 				class={annotakitState.annotationCount > 0 ? BTN_DANGER : BTN_DISABLED}
-				onclick={() => annotakitState.clearAll()}
+				onclick={() => { closePanels(); showClearConfirm = true; }}
 				disabled={annotakitState.annotationCount === 0}
 			>
 				<Icon name="trash" />
@@ -176,7 +219,7 @@
 			<TooltipButton
 				label="Settings"
 				class={showSettings ? BTN_ACTIVE : BTN}
-				onclick={() => (showSettings = !showSettings)}
+				onclick={() => { const open = !showSettings; closePanels(); showSettings = open; }}
 			>
 				<Icon name="gear" />
 			</TooltipButton>

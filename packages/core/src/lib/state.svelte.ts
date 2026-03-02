@@ -13,9 +13,9 @@ import { loadAnnotations, saveAnnotations, clearAnnotations } from './core/annot
 
 class AnnotakitState {
 	// Core
-	active = $state(true);
 	enabled = $state(true);
 	minimized = $state(false);
+	visible = $state(true);
 	annotations = $state<Annotation[]>([]);
 
 	// Config
@@ -38,7 +38,14 @@ class AnnotakitState {
 
 	annotationCount = $derived(this.annotations.length);
 
-	isActive = $derived(this.enabled && this.active);
+	isActive = $derived(this.enabled && !this.minimized);
+
+	panelPositionClasses = $derived.by(() => {
+		const [v, h] = this.position.split('-');
+		const vert = v === 'top' ? 'top-14' : 'bottom-14';
+		const horiz = h === 'left' ? 'left-2' : h === 'right' ? 'right-2' : 'left-1/2 -translate-x-1/2';
+		return `${vert} ${horiz}`;
+	});
 
 	// Methods
 	addAnnotation(annotation: Annotation): void {
@@ -76,27 +83,15 @@ class AnnotakitState {
 		saveAnnotations(this.storageKey, this.annotations);
 	}
 
-	toggleActive(): void {
-		this.active = !this.active;
-		if (!this.active) {
-			this.selectedAnnotationId = null;
-		}
+	toggleVisible(): void {
+		this.visible = !this.visible;
 	}
-
-	private activeBeforeMinimize = false;
 
 	toggleMinimized(): void {
 		if (!this.minimized) {
-			// Collapsing — remember active state
-			this.activeBeforeMinimize = this.active;
-			this.active = false;
 			this.selectedAnnotationId = null;
-			this.minimized = true;
-		} else {
-			// Expanding — restore previous active state
-			this.minimized = false;
-			this.active = this.activeBeforeMinimize;
 		}
+		this.minimized = !this.minimized;
 	}
 
 	selectAnnotation(id: string | null): void {

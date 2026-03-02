@@ -86,6 +86,8 @@ Annotakit generates structured markdown in three formats:
 
 ## Features
 
+- Clear-all confirmation to prevent accidental deletion
+- Toggle annotation visibility without disabling annotation mode
 - Freeze page animations while annotating
 - Annotations persist in localStorage across sessions
 - Light/dark mode with auto-detection

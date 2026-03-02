@@ -8,14 +8,6 @@
 	let commentValue = $state('');
 	let showDetails = $state(false);
 
-	// Panel position classes derived from toolbar position
-	let panelPositionClasses = $derived.by(() => {
-		const [v, h] = annotakitState.position.split('-');
-		const vert = v === 'top' ? 'top-14' : 'bottom-14';
-		const horiz = h === 'left' ? 'left-2' : h === 'right' ? 'right-2' : 'left-1/2 -translate-x-1/2';
-		return `${vert} ${horiz}`;
-	});
-
 	$effect(() => {
 		if (annotation) {
 			commentValue = annotation.comment;
@@ -44,7 +36,7 @@
 {#if annotation}
 	<div
 		data-annotakit="panel"
-		class="pointer-events-auto fixed {panelPositionClasses} z-[99999] flex w-80 flex-col rounded-lg border-2 border-annotakit-stroke bg-annotakit-surface shadow-annotakit"
+		class="pointer-events-auto fixed {annotakitState.panelPositionClasses} z-[99999] flex w-80 flex-col rounded-lg border-2 border-annotakit-stroke bg-annotakit-surface shadow-annotakit"
 		style="max-height: calc(100vh - 72px);"
 	>
 		<!-- Header with expand toggle -->

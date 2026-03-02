@@ -266,7 +266,7 @@
 	{/each}
 
 	<!-- Annotation pins -->
-	{#if annotakitState.isActive}
+	{#if annotakitState.visible}
 		{#each annotakitState.annotations as annotation, i (annotation.id)}
 			<AnnotationPin {annotation} index={i} />
 		{/each}
@@ -282,7 +282,7 @@
 	{/if}
 
 	<!-- Detail panel for selected annotation -->
-	{#if annotakitState.isActive}
+	{#if annotakitState.visible}
 		<AnnotationPanel />
 	{/if}
 </div>
