@@ -88,5 +88,6 @@ Annotakit generates structured markdown in three formats:
 - Keyboard shortcuts (Escape to deselect/close)
 
 ## License
+© 2026 nodestarQ
 
 [MIT](LICENSE)
