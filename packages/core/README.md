@@ -1,5 +1,9 @@
 # annotakit
 
+[![npm version](https://img.shields.io/npm/v/annotakit)](https://www.npmjs.com/package/annotakit)
+[![npm downloads](https://img.shields.io/npm/dm/annotakit)](https://www.npmjs.com/package/annotakit)
+[![license](https://img.shields.io/npm/l/annotakit)](LICENSE)
+
 Click your UI, leave notes, generate agent-ready context.
 
 <!-- TODO: Add screenshot or GIF demo -->
