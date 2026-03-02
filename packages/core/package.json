@@ -1,7 +1,7 @@
 {
   "name": "annotakit",
   "version": "0.1.0",
-  "description": "Floating toolbar for SvelteKit apps — annotate UI elements and generate structured markdown feedback for AI coding agents",
+  "description": "AnnotaKit lets you click your UI, leave notes, and generate agent-ready context.",
   "license": "MIT",
   "type": "module",
   "svelte": "./dist/index.js",
@@ -57,6 +57,6 @@
   "author": "nodestarQ",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/anthropics/annotakit.git"
+    "url": "git+https://github.com/nodestarQ/annotaKit.git"
   }
 }
