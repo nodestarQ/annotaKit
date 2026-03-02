@@ -52,19 +52,19 @@ That's it. A floating toolbar appears in the corner of your app.
 | `storageKey` | `string` | `'annotakit'` | localStorage key for persisted annotations |
 | `retentionDays` | `number` | `7` | Days to keep annotations in storage |
 | `enabled` | `boolean` | `true` | Show/hide the toolbar |
-| `onOutput` | `(markdown: string) => void` | — | Callback when markdown is generated |
+| `onOutput` | `(markdown: string) => void` | - | Callback when markdown is generated |
 
 ## Output Formats
 
 Annotakit generates structured markdown in three formats:
 
-**Compact** — one line per annotation, minimal:
+**Compact** -one line per annotation, minimal:
 
 ```
-1. `nav > button.menu` (HeaderNav) — Fix hover state
+1. `nav > button.menu` (HeaderNav) -Fix hover state
 ```
 
-**Standard** — grouped with selector, component info, accessibility:
+**Standard** -grouped with selector, component info, accessibility:
 
 ```markdown
 ### 1. BUTTON
@@ -75,13 +75,13 @@ Annotakit generates structured markdown in three formats:
 - **Accessibility:** role="button", aria-label="Menu"
 ```
 
-**Detailed** — everything above plus dimensions, computed styles, and component chain.
+**Detailed** -everything above plus dimensions, computed styles, and component chain.
 
 ## Modes
 
-- **Element** — click any element to annotate it with a CSS selector, component info, and a comment
-- **Text** — select text within an element to capture the selection with surrounding context
-- **Multi-element** — click multiple elements to group them into a single annotation
+- **Element** -click any element to annotate it with a CSS selector, component info, and a comment
+- **Text** -select text within an element to capture the selection with surrounding context
+- **Multi-element** -click multiple elements to group them into a single annotation
 
 ## Features
 
