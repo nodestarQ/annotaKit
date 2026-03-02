@@ -30,6 +30,8 @@ pnpm add annotakit
 
 A floating toolbar appears in the corner. Click any element to annotate it.
 
+Start collapsed with `<Annotakit minimized />`.
+
 See the full [package README](packages/core/README.md) for props, output formats, and configuration.
 
 ## How It Works

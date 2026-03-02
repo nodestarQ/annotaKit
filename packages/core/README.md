@@ -52,6 +52,7 @@ That's it. A floating toolbar appears in the corner of your app.
 | `storageKey` | `string` | `'annotakit'` | localStorage key for persisted annotations |
 | `retentionDays` | `number` | `7` | Days to keep annotations in storage |
 | `enabled` | `boolean` | `true` | Show/hide the toolbar |
+| `minimized` | `boolean` | `false` | Start the toolbar collapsed |
 | `onOutput` | `(markdown: string) => void` | - | Callback when markdown is generated |
 
 ## Output Formats

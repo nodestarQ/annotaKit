@@ -1,6 +1,6 @@
 {
   "name": "annotakit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "AnnotaKit lets you click your UI, leave notes, and generate agent-ready context.",
   "license": "MIT",
   "type": "module",

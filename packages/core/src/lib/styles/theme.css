@@ -1,4 +1,6 @@
 /* Annotakit distributable theme tokens — import in consumer's app.css */
+@source "../components";
+
 @theme {
 	--color-annotakit-primary: oklch(0.65 0.2 250);
 	--color-annotakit-primary-light: oklch(0.8 0.15 250);

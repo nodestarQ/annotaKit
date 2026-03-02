@@ -13,6 +13,7 @@
 		storageKey?: string;
 		retentionDays?: number;
 		enabled?: boolean;
+		minimized?: boolean;
 		onOutput?: (markdown: string) => void;
 	}
 
@@ -23,6 +24,7 @@
 		storageKey = 'annotakit',
 		retentionDays = 7,
 		enabled = true,
+		minimized = false,
 		onOutput
 	}: Props = $props();
 
@@ -36,6 +38,7 @@
 		annotakitState.storageKey = storageKey;
 		annotakitState.retentionDays = retentionDays;
 		annotakitState.enabled = enabled;
+		annotakitState.minimized = minimized;
 	});
 
 	// Resolve theme and set data attribute

@@ -3,7 +3,9 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm -C packages/core dev",
+    "dev:docs": "pnpm -C apps/docs dev",
     "build": "pnpm -C packages/core package",
+    "build:docs": "pnpm -C apps/docs build",
     "check": "pnpm -C packages/core check"
   }
 }
