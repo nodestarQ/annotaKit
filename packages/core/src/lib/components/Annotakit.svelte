@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Tooltip } from 'bits-ui';
 	import { annotakitState } from '../state.svelte.js';
 	import type { AnnotakitPosition, OutputFormat, AnnotakitTheme } from '../types.js';
 	import Toolbar from './Toolbar.svelte';
@@ -108,11 +107,9 @@
 </script>
 
 {#if mounted && annotakitState.enabled}
-	<Tooltip.Provider delayDuration={300}>
-		<Toolbar />
-		<OverlayLayer />
-		{#if annotakitState.showOutputDialog}
-			<OutputDialog {onOutput} />
-		{/if}
-	</Tooltip.Provider>
+	<Toolbar />
+	<OverlayLayer />
+	{#if annotakitState.showOutputDialog}
+		<OutputDialog {onOutput} />
+	{/if}
 {/if}
