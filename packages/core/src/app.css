@@ -13,11 +13,19 @@
 	--color-annotakit-text-dark: #e3eae1;
 	--color-annotakit-border: #c5d1c2;
 	--color-annotakit-border-dark: #252b25;
+	--color-annotakit-stroke: rgb(26 26 26 / 0.8);
 	--color-annotakit-highlight: #4ade8026;
 	--color-annotakit-highlight-border: #4ade8099;
 	--shadow-annotakit: 0 4px 24px oklch(0 0 0 / 0.12);
 	--radius-annotakit: 0.5rem;
 	--radius-annotakit-lg: 0.75rem;
+}
+
+[data-annotakit-theme="dark"] {
+	--color-annotakit-surface: var(--color-annotakit-surface-dark);
+	--color-annotakit-text: var(--color-annotakit-text-dark);
+	--color-annotakit-border: var(--color-annotakit-border-dark);
+	--color-annotakit-stroke: rgb(227 234 225 / 0.3);
 }
 
 @keyframes float {

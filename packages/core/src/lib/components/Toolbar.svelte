@@ -11,15 +11,30 @@
 	const EXPANDED_WIDTH = 320;
 
 	// Reusable button variant classes
-	const BTN = 'text-annotakit-text/50 hover:bg-annotakit-text hover:text-white dark:text-annotakit-text-dark/50 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark';
-	const BTN_ACTIVE = 'bg-annotakit-text text-white dark:bg-annotakit-text-dark dark:text-annotakit-surface-dark';
-	const BTN_DISABLED = 'cursor-default text-annotakit-text/15 dark:text-annotakit-text-dark/15';
-	const BTN_DANGER = 'text-annotakit-text/50 hover:bg-annotakit-danger hover:text-white dark:text-annotakit-text-dark/50 dark:hover:bg-annotakit-danger dark:hover:text-white';
+	const BTN = 'text-annotakit-text/50 hover:bg-annotakit-text hover:text-annotakit-surface';
+	const BTN_ACTIVE = 'bg-annotakit-text text-annotakit-surface';
+	const BTN_DISABLED = 'cursor-default text-annotakit-text/15';
+	const BTN_DANGER = 'text-annotakit-text/50 hover:bg-annotakit-danger hover:text-white';
 
 	let showSettings = $state(false);
 
 	let isExpanded = $derived(annotakitState.activeAnnotation !== null || showSettings);
 	let targetWidth = $derived(isExpanded ? EXPANDED_WIDTH : COMPACT_WIDTH);
+
+	// Position classes derived from state
+	let positionClasses = $derived.by(() => {
+		const [v, h] = annotakitState.position.split('-');
+		const vert = v === 'top' ? 'top-2' : 'bottom-2';
+		const horiz = h === 'left' ? 'left-2' : h === 'right' ? 'right-2' : 'left-1/2 -translate-x-1/2';
+		return `${vert} ${horiz}`;
+	});
+
+	let panelPositionClasses = $derived.by(() => {
+		const [v, h] = annotakitState.position.split('-');
+		const vert = v === 'top' ? 'top-14' : 'bottom-14';
+		const horiz = h === 'left' ? 'left-2' : h === 'right' ? 'right-2' : 'left-1/2 -translate-x-1/2';
+		return `${vert} ${horiz}`;
+	});
 
 	function telescopeIn(_node: HTMLElement, { duration = 250, easing = cubicOut }: { duration?: number; easing?: (t: number) => number } = {}): TransitionConfig {
 		const target = isExpanded ? EXPANDED_WIDTH : COMPACT_WIDTH;
@@ -56,14 +71,14 @@
 </script>
 
 {#if !annotakitState.minimized}
-	<!-- Settings panel (above toolbar) -->
+	<!-- Settings panel (above/below toolbar) -->
 	{#if showSettings}
 		<div
 			data-annotakit="settings"
-			class="pointer-events-auto fixed right-2 bottom-14 z-[99999] flex w-80 flex-col rounded-lg border-2 border-annotakit-text/80 bg-annotakit-surface shadow-annotakit dark:border-annotakit-text-dark/30 dark:bg-annotakit-surface-dark"
+			class="pointer-events-auto fixed {panelPositionClasses} z-[99999] flex w-80 flex-col rounded-lg border-2 border-annotakit-stroke bg-annotakit-surface shadow-annotakit"
 		>
-			<div class="flex shrink-0 items-center justify-between border-b-2 border-annotakit-text/80 px-3 py-2 dark:border-annotakit-text-dark/30">
-				<span class="text-xs font-medium text-annotakit-text dark:text-annotakit-text-dark">Settings</span>
+			<div class="flex shrink-0 items-center justify-between border-b-2 border-annotakit-stroke px-3 py-2">
+				<span class="text-xs font-medium text-annotakit-text">Settings</span>
 				<button
 					class="rounded p-1 {BTN}"
 					onclick={() => (showSettings = false)}
@@ -75,13 +90,13 @@
 
 			<div class="space-y-2 p-3">
 				<div>
-					<div class="mb-1 text-[10px] font-medium uppercase tracking-wider text-annotakit-text/50 dark:text-annotakit-text-dark/50">Output format</div>
+					<div class="mb-1 text-[10px] font-medium uppercase tracking-wider text-annotakit-text/50">Output format</div>
 					<div class="flex gap-1">
 						{#each FORMAT_OPTIONS as fmt}
 							<button
 								class="rounded px-2.5 py-1 text-xs transition-all duration-300 ease-out {annotakitState.outputFormat === fmt.value
 									? BTN_ACTIVE
-									: 'text-annotakit-text/70 hover:bg-annotakit-text hover:text-white dark:text-annotakit-text-dark/70 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark'}"
+									: 'text-annotakit-text/70 hover:bg-annotakit-text hover:text-annotakit-surface'}"
 								onclick={() => (annotakitState.outputFormat = fmt.value)}
 							>
 								{fmt.label}
@@ -96,7 +111,7 @@
 	<!-- Toolbar -->
 	<div
 		data-annotakit="toolbar"
-		class="fixed right-2 bottom-2 z-[99999] flex select-none items-center gap-1 rounded-lg border-2 border-annotakit-text/80 bg-annotakit-surface px-2 py-1.5 shadow-annotakit transition-[width] duration-200 ease-out dark:border-annotakit-text-dark/30 dark:bg-annotakit-surface-dark"
+		class="fixed {positionClasses} z-[99999] flex select-none items-center gap-1 rounded-lg border-2 border-annotakit-stroke bg-annotakit-surface px-2 py-1.5 shadow-annotakit transition-[width] duration-200 ease-out"
 		style="width: {targetWidth}px;"
 		role="toolbar"
 		tabindex="0"
@@ -119,7 +134,7 @@
 				{/if}
 			</TooltipButton>
 
-			<div class="mx-0.5 h-5 w-px bg-annotakit-text/20 dark:bg-annotakit-text-dark/20"></div>
+			<div class="mx-0.5 h-5 w-px bg-annotakit-text/20"></div>
 		</div>
 
 		<!-- Center: Freeze | Edit | Copy | Delete | Settings -->
@@ -169,7 +184,7 @@
 
 		<!-- Right: Close -->
 		<div class="flex shrink-0 items-center gap-1">
-			<div class="mx-0.5 h-5 w-px bg-annotakit-text/20 dark:bg-annotakit-text-dark/20"></div>
+			<div class="mx-0.5 h-5 w-px bg-annotakit-text/20"></div>
 
 			<button
 				class="rounded p-1.5 transition-all duration-300 ease-out {BTN_DANGER}"
@@ -184,7 +199,7 @@
 	<!-- Minimized state -->
 	<button
 		data-annotakit="toolbar-minimized"
-		class="fixed right-2 bottom-2 z-[99999] flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg border-2 border-annotakit-text/80 bg-annotakit-surface text-annotakit-text/50 shadow-annotakit transition-all duration-300 ease-out hover:bg-annotakit-text hover:text-white dark:border-annotakit-text-dark/30 dark:bg-annotakit-surface-dark dark:text-annotakit-text-dark/50 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark"
+		class="fixed {positionClasses} z-[99999] flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg border-2 border-annotakit-stroke bg-annotakit-surface text-annotakit-text/50 shadow-annotakit transition-all duration-300 ease-out hover:bg-annotakit-text hover:text-annotakit-surface"
 		onclick={() => annotakitState.toggleMinimized()}
 		title="Restore Annotakit toolbar"
 	>

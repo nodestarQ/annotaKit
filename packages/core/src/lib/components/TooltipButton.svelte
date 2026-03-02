@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onDestroy } from 'svelte';
 	import type { Snippet } from 'svelte';
+	import { annotakitState } from '../state.svelte.js';
 
 	interface Props {
 		label: string;
@@ -15,6 +16,10 @@
 	let show = $state(false);
 	let timer: ReturnType<typeof setTimeout> | undefined;
 	const tooltipId = `annotakit-tip-${Math.random().toString(36).slice(2, 8)}`;
+
+	let tooltipClasses = $derived(
+		annotakitState.position.startsWith('top') ? 'top-full mt-2' : 'bottom-full mb-2'
+	);
 
 	function open() {
 		timer = setTimeout(() => (show = true), 300);
@@ -44,7 +49,7 @@
 		<div
 			id={tooltipId}
 			role="tooltip"
-			class="pointer-events-none absolute bottom-full left-1/2 z-[100000] mb-2 -translate-x-1/2 whitespace-nowrap rounded border-2 border-annotakit-text/80 bg-annotakit-surface px-2 py-1 text-xs text-annotakit-text shadow-lg dark:border-annotakit-text-dark/30 dark:bg-annotakit-surface-dark dark:text-annotakit-text-dark"
+			class="pointer-events-none absolute {tooltipClasses} left-1/2 z-[100000] -translate-x-1/2 whitespace-nowrap rounded border-2 border-annotakit-stroke bg-annotakit-surface px-2 py-1 text-xs text-annotakit-text shadow-lg"
 		>
 			{label}
 		</div>
