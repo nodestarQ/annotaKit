@@ -69,7 +69,7 @@ pnpm build
 
 ## Acknowledgements
 
-Inspired by [Agentation](https://github.com/anthropics/agentation) (PolyForm Shield 1.0.0). Annotakit is a clean-room implementation built for the SvelteKit ecosystem, written from scratch under the MIT license.
+Inspired by [Agentation](https://github.com/benjitaylor/agentation) (PolyForm Shield 1.0.0). Annotakit is a clean-room implementation built for the SvelteKit ecosystem, written from scratch under the MIT license.
 
 ## License
 
