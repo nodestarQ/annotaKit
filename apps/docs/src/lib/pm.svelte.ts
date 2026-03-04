@@ -1,6 +1,6 @@
 export const managers = [
 	{ name: 'npm', command: 'npm install annotakit' },
-	{ name: 'pnpm', command: 'pnpm install annotakit' },
+	{ name: 'pnpm', command: 'pnpm add annotakit' },
 	{ name: 'yarn', command: 'yarn add annotakit' }
 ] as const;
 

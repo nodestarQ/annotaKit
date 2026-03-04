@@ -1,5 +1,5 @@
 /**
- * CSS selector generation — produces minimal, unique selectors for DOM elements.
+ * CSS selector generation - produces minimal, unique selectors for DOM elements.
  * Priority: #id > [data-testid] > aria-label+role > minimal class combo > tag:nth-of-type path
  */
 

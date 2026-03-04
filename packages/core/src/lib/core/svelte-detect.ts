@@ -1,5 +1,5 @@
 /**
- * Svelte component detection — reads __svelte_meta in dev mode (Svelte 5.35.1+).
+ * Svelte component detection - reads __svelte_meta in dev mode (Svelte 5.35.1+).
  * Gracefully returns null in production or non-Svelte pages.
  */
 

@@ -1,5 +1,5 @@
 /**
- * Element inspection — extracts tag, classes, selector, dimensions, computed styles,
+ * Element inspection - extracts tag, classes, selector, dimensions, computed styles,
  * accessibility info, and Svelte component info from a DOM element.
  */
 

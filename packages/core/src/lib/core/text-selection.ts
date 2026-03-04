@@ -1,5 +1,5 @@
 /**
- * Text selection capture — captures selected text with surrounding context.
+ * Text selection capture - captures selected text with surrounding context.
  */
 
 import type { TextSelectionInfo } from '../types.js';

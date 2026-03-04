@@ -21,13 +21,13 @@ Annotakit generates markdown with annotations in three possible formats. Each an
 
 ## How to find the code
 
-1. **From `Component:` lines** — Open the file path directly (e.g., `src/lib/Button.svelte:42`)
-2. **From `Selector:` lines** — Search the codebase for the selector pattern:
+1. **From `Component:` lines** - Open the file path directly (e.g., `src/lib/Button.svelte:42`)
+2. **From `Selector:` lines** - Search the codebase for the selector pattern:
    - `#id` → search for `id="..."` in templates
    - `.class` → search for `class="... class ..."` in templates
    - `[data-testid="x"]` → search for `data-testid="x"`
    - `tag:nth-of-type(n)` → find the nth occurrence of that tag in the parent
-3. **From `Selected text:`** — Search for the literal text string in template files
+3. **From `Selected text:`** - Search for the literal text string in template files
 
 ## How to apply feedback
 

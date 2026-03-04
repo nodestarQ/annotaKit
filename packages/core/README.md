@@ -6,8 +6,7 @@
 
 Click your UI, leave notes, generate agent-ready context.
 
-<!-- TODO: Add screenshot or GIF demo -->
-<!-- ![annotakit demo](https://raw.githubusercontent.com/nodestarQ/annotaKit/main/.github/demo.gif) -->
+![annotakit demo](../../media/demo.gif)
 
 ## Install
 

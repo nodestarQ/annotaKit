@@ -1,5 +1,5 @@
 /**
- * Markdown generation — produces structured markdown from annotations.
+ * Markdown generation - produces structured markdown from annotations.
  * Three formats: compact, standard, detailed.
  */
 
@@ -22,7 +22,7 @@ function formatCompact(annotation: Annotation, index: number): string {
 		}
 	}
 	if (annotation.comment) {
-		parts.push(`— ${annotation.comment}`);
+		parts.push(`- ${annotation.comment}`);
 	}
 	if (annotation.textSelection) {
 		parts.push(`[selected: "${annotation.textSelection.text.slice(0, 60)}"]`);
@@ -75,7 +75,7 @@ function formatDetailed(annotation: Annotation, index: number): string {
 	if (annotation.mode === 'multi' && annotation.elements && annotation.elements.length > 1) {
 		lines.push(`- **Elements (${annotation.elements.length}):**`);
 		for (const el of annotation.elements) {
-			const comp = el.svelte ? ` — ${el.svelte.name} (\`${el.svelte.file}\`)` : '';
+			const comp = el.svelte ? ` - ${el.svelte.name} (\`${el.svelte.file}\`)` : '';
 			lines.push(`  - \`${el.selector}\`${comp}`);
 		}
 	} else {

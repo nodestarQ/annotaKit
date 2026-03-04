@@ -1,5 +1,5 @@
 /**
- * Annotation creation helpers — bridges DOM interactions to annotation model.
+ * Annotation creation helpers - bridges DOM interactions to annotation model.
  */
 
 import type { Annotation } from '../types.js';

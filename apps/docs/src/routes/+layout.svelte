@@ -5,8 +5,6 @@
 	import { Drawer } from 'vaul-svelte';
 	import { afterNavigate } from '$app/navigation';
 
-	declare const __ANNOTAKIT_VERSION__: string;
-
 	let { children } = $props();
 	let drawerOpen = $state(false);
 	const version = __ANNOTAKIT_VERSION__;

@@ -82,7 +82,7 @@
 		}
 		if (overlayEl) overlayEl.style.display = '';
 
-		// Remove ancestors — if an element contains another in the set, drop it
+		// Remove ancestors - if an element contains another in the set, drop it
 		const elements = Array.from(seen);
 		return elements.filter((el) =>
 			!elements.some((other) => other !== el && el.contains(other))
@@ -175,7 +175,7 @@
 		isTextDrag = false;
 		highlightedElements = [];
 
-		// Text selection — only when drag started over a text cursor
+		// Text selection - only when drag started over a text cursor
 		if (wasTextDrag) {
 			const selection = window.getSelection();
 			if (selection && !selection.isCollapsed && (selection.toString().trim().length > 0)) {
@@ -209,7 +209,7 @@
 				return;
 			}
 		} else {
-			// Simple click — single element annotation
+			// Simple click - single element annotation
 			if (isAnnotakitElement(e.target as Element)) return;
 
 			const annotation = handleAnnotateClick(start.target);

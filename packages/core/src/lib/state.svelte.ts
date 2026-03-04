@@ -1,6 +1,6 @@
 /**
  * Central reactive state using Svelte 5 runes class pattern.
- * Single instance — Annotakit is strictly client-side dev tooling.
+ * Single instance - Annotakit is strictly client-side dev tooling.
  */
 
 import type {

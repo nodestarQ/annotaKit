@@ -8,8 +8,7 @@ Click your UI, leave notes, generate agent-ready context.
 
 Annotakit adds a floating toolbar to your SvelteKit app. Click elements, select text, or drag to multi-select, then export structured markdown that AI agents can consume directly.
 
-<!-- TODO: Add screenshot or GIF demo -->
-<!-- ![annotakit demo](https://raw.githubusercontent.com/nodestarQ/annotaKit/main/.github/demo.gif) -->
+![annotakit demo](media/demo.gif)
 
 ## Quick Start
 

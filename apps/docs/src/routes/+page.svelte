@@ -11,7 +11,7 @@
 </script>
 
 <svelte:head>
-	<title>annotaKit - Agent-ready UI annotations for SvelteKit</title>
+	<title>annotaKit</title>
 </svelte:head>
 
 <h1 class="not-prose text-3xl md:text-4xl font-bold leading-tight text-text mb-8">Show your AI<br />what to fix!</h1>
