@@ -6,6 +6,8 @@
 
 Click your UI, leave notes, generate agent-ready context.
 
+**[Documentation](https://annotakit.dev)**
+
 ![annotakit demo](../../media/demo.gif)
 
 ## Install

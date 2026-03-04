@@ -4,6 +4,7 @@
 	import { page } from '$app/state';
 	import { Drawer } from 'vaul-svelte';
 	import { afterNavigate } from '$app/navigation';
+	import { PUBLIC_UMAMI_URL, PUBLIC_UMAMI_WEBSITE_ID } from '$env/static/public';
 
 	let { children } = $props();
 	let drawerOpen = $state(false);
@@ -30,6 +31,12 @@
 		return page.url.pathname === href;
 	}
 </script>
+
+<svelte:head>
+	{#if PUBLIC_UMAMI_URL && PUBLIC_UMAMI_WEBSITE_ID}
+		<script defer src={PUBLIC_UMAMI_URL} data-website-id={PUBLIC_UMAMI_WEBSITE_ID}></script>
+	{/if}
+</svelte:head>
 
 <div class="min-h-screen bg-surface">
 	<!-- Mobile top bar -->
