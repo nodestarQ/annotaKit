@@ -48,6 +48,17 @@ Output includes CSS selectors, Svelte component info, accessibility attributes, 
 | [`annotakit`](packages/core) | Core library - Svelte 5 component + framework-agnostic engine |
 | `@annotakit/mcp` | MCP server (planned) |
 
+## Roadmap
+
+Here's where annotaKit is headed. Contributions to any of these are welcome.
+
+- [ ] **MCP server** - `@annotakit/mcp` package that connects annotation output directly to Claude via the Model Context Protocol
+- [ ] **Framework packages** - dedicated packages for other frameworks (React, Vue, etc.) so annotaKit works beyond SvelteKit
+- [ ] **Collaborative annotations** - share annotation sessions across team members in real time
+- [ ] **Browser extension** - annotate any website without adding annotaKit to the project
+
+Have an idea? [Open an issue](https://github.com/nodestarQ/annotaKit/issues) or check the [contributing guide](CONTRIBUTING.md).
+
 ## Development
 
 Requires [pnpm](https://pnpm.io/) and Node.js 18+.
