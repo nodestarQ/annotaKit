@@ -57,7 +57,11 @@ Here's where annotaKit is headed. Contributions to any of these are welcome.
 - [ ] **Collaborative annotations** - share annotation sessions across team members in real time
 - [ ] **Browser extension** - annotate any website without adding annotaKit to the project
 
-Have an idea? [Open an issue](https://github.com/nodestarQ/annotaKit/issues) or check the [contributing guide](CONTRIBUTING.md).
+Have an idea? [Open an issue](https://github.com/nodestarQ/annotaKit/issues).
+
+## Contributing
+
+We're looking for help with documentation, DX/testing, export formats, and MCP integration. See the [contributing guide](CONTRIBUTING.md) for details on how to get started.
 
 ## Development
 

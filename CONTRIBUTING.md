@@ -21,15 +21,14 @@ apps/
 
 **Tech stack:** Svelte 5, SvelteKit, TypeScript, Tailwind CSS 4, Vite.
 
-## Where Help Is Wanted
+## Where Help Is Needed
 
-Not sure where to start? Here are areas where contributions are most useful:
+Not sure where to start? These are the areas where contributions make the biggest difference right now:
 
-- **Bug fixes** in the core package
-- **Documentation improvements** - typos, clarity, missing examples
-- **Export formatting** - better structured output for AI agents
-- **UI/UX polish** - toolbar behavior, accessibility, visual refinements
-- **MCP groundwork** - research and early design for the planned MCP server
+- **Documentation** - better guides, more examples, clearer explanations of props and output formats
+- **DX and testing** - improve the developer experience, add tests, streamline the local workflow
+- **Export formats** - better structured output for AI agents, new format options, smarter markdown generation
+- **MCP integration** - research, design, and early implementation of the `@annotakit/mcp` server
 
 For larger features or architectural changes, please open an issue or discussion first. That way nobody sinks time into work that may not align with the project direction.
 
