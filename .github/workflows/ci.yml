@@ -49,3 +49,6 @@ jobs:
       - run: pnpm build
 
       - run: pnpm build:docs
+        env:
+          PUBLIC_UMAMI_URL: ''
+          PUBLIC_UMAMI_WEBSITE_ID: ''
