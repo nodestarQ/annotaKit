@@ -6,6 +6,8 @@ export type OutputFormat = 'compact' | 'standard' | 'detailed';
 
 export type AnnotakitTheme = 'light' | 'dark' | 'auto';
 
+export type AnnotakitColor = 'green' | 'blue' | 'purple' | 'red' | 'orange' | 'yellow';
+
 export interface SvelteComponentInfo {
 	name: string;
 	file: string;
@@ -72,6 +74,7 @@ export interface AnnotakitConfig {
 	position: AnnotakitPosition;
 	outputFormat: OutputFormat;
 	theme: AnnotakitTheme;
+	highlightColor: AnnotakitColor;
 	storageKey: string;
 	retentionDays: number;
 	enabled: boolean;
