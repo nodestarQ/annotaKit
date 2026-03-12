@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { annotakitState } from '../state.svelte.js';
-	import type { AnnotakitPosition, OutputFormat, AnnotakitTheme } from '../types.js';
+	import type { AnnotakitColor, AnnotakitPosition, OutputFormat, AnnotakitTheme } from '../types.js';
+	import { applyHighlightColor, clearHighlightColor, loadHighlightColor, saveHighlightColor } from '../core/colors.js';
 	import Toolbar from './Toolbar.svelte';
 	import OverlayLayer from './OverlayLayer.svelte';
 	import OutputDialog from './OutputDialog.svelte';
@@ -10,6 +11,7 @@
 		position?: AnnotakitPosition;
 		outputFormat?: OutputFormat;
 		theme?: AnnotakitTheme;
+		highlightColor?: AnnotakitColor;
 		storageKey?: string;
 		retentionDays?: number;
 		enabled?: boolean;
@@ -21,6 +23,7 @@
 		position = 'bottom-right',
 		outputFormat = 'standard',
 		theme = 'auto',
+		highlightColor = 'green',
 		storageKey = 'annotakit',
 		retentionDays = 7,
 		enabled = true,
@@ -35,6 +38,7 @@
 		annotakitState.position = position;
 		annotakitState.outputFormat = outputFormat;
 		annotakitState.theme = theme;
+		annotakitState.highlightColor = highlightColor;
 		annotakitState.storageKey = storageKey;
 		annotakitState.retentionDays = retentionDays;
 		annotakitState.enabled = enabled;
@@ -53,6 +57,13 @@
 			resolved = annotakitState.theme as 'light' | 'dark';
 		}
 		document.documentElement.setAttribute('data-annotakit-theme', resolved);
+	});
+
+	// Apply highlight color CSS custom properties and persist
+	$effect(() => {
+		if (!mounted) return;
+		applyHighlightColor(annotakitState.highlightColor);
+		saveHighlightColor(annotakitState.storageKey, annotakitState.highlightColor);
 	});
 
 	// Toggle crosshair cursor on body
@@ -99,12 +110,15 @@
 	onMount(() => {
 		mounted = true;
 		annotakitState.loadFromStorage();
+		const savedColor = loadHighlightColor(annotakitState.storageKey);
+		if (savedColor) annotakitState.highlightColor = savedColor;
 		document.addEventListener('keydown', handleKeyDown);
 		return () => {
 			document.removeEventListener('keydown', handleKeyDown);
 			document.body.classList.remove('annotakit-active');
 			document.documentElement.removeAttribute('data-annotakit-theme');
 			document.getElementById('annotakit-freeze-styles')?.remove();
+			clearHighlightColor();
 		};
 	});
 </script>

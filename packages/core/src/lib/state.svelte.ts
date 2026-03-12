@@ -5,6 +5,7 @@
 
 import type {
 	Annotation,
+	AnnotakitColor,
 	AnnotakitPosition,
 	AnnotakitTheme,
 	OutputFormat
@@ -22,6 +23,7 @@ class AnnotakitState {
 	position = $state<AnnotakitPosition>('bottom-right');
 	outputFormat = $state<OutputFormat>('standard');
 	theme = $state<AnnotakitTheme>('auto');
+	highlightColor = $state<AnnotakitColor>('green');
 	storageKey = $state('annotakit');
 	retentionDays = $state(7);
 

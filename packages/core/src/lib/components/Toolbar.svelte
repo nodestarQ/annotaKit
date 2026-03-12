@@ -3,6 +3,7 @@
 	import type { TransitionConfig } from 'svelte/transition';
 	import { annotakitState } from '../state.svelte.js';
 	import { generateMarkdown, copyToClipboard, FORMAT_OPTIONS } from '../core/output.js';
+	import { COLOR_OPTIONS } from '../core/colors.js';
 	import Icon from './Icon.svelte';
 	import TooltipButton from './TooltipButton.svelte';
 
@@ -105,6 +106,24 @@
 							>
 								{fmt.label}
 							</button>
+						{/each}
+					</div>
+				</div>
+
+				<div class="h-px bg-annotakit-text/10"></div>
+
+				<div>
+					<div class="mb-1 text-[10px] font-medium uppercase tracking-wider text-annotakit-text/50">Highlight color</div>
+					<div class="flex gap-2">
+						{#each COLOR_OPTIONS as color}
+							<button
+								class="h-6 flex-1 rounded-md border-2 transition-all duration-300 ease-out {annotakitState.highlightColor === color.value
+									? 'border-annotakit-text scale-110'
+									: 'border-transparent hover:scale-110'}"
+								style="background-color: {color.base};"
+								onclick={() => (annotakitState.highlightColor = color.value)}
+								title={color.label}
+							></button>
 						{/each}
 					</div>
 				</div>

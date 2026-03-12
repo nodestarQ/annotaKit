@@ -1,6 +1,7 @@
 export { default as Annotakit } from './components/Annotakit.svelte';
 export type {
 	Annotation,
+	AnnotakitColor,
 	AnnotakitConfig,
 	AnnotakitMode,
 	AnnotakitPosition,
