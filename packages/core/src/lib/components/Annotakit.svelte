@@ -36,7 +36,9 @@
 	// Sync props to state
 	$effect(() => {
 		annotakitState.position = position;
-		annotakitState.outputFormat = outputFormat;
+		if (typeof window === 'undefined' || !localStorage.getItem('annotakit-output-format')) {
+			annotakitState.outputFormat = outputFormat;
+		}
 		annotakitState.theme = theme;
 		annotakitState.highlightColor = highlightColor;
 		annotakitState.storageKey = storageKey;
