@@ -52,8 +52,10 @@ That's it. A floating toolbar appears in the corner of your app.
 | `theme` | `'light' \| 'dark' \| 'auto'` | `'auto'` | Color theme (`auto` follows system/`<html class="dark">`) |
 | `storageKey` | `string` | `'annotakit'` | localStorage key for persisted annotations |
 | `retentionDays` | `number` | `7` | Days to keep annotations in storage |
+| `highlightColor` | `'green' \| 'blue' \| 'purple' \| 'red' \| 'orange' \| 'yellow'` | `'green'` | Annotation highlight color |
 | `enabled` | `boolean` | `true` | Show/hide the toolbar |
 | `minimized` | `boolean` | `false` | Start the toolbar collapsed |
+| `mcpServerUrl` | `string` | - | MCP server URL for status indicator (e.g. `'http://localhost:4156'`) |
 | `onOutput` | `(markdown: string) => void` | - | Callback when markdown is generated |
 
 ## Output Formats
@@ -87,13 +89,31 @@ Annotakit generates structured markdown in three formats:
 
 ## Features
 
+- Edit, delete, and update annotations inline
+- Markdown export in three detail levels with output preview dialog
+- Quick copy to clipboard from toolbar
 - Clear-all confirmation to prevent accidental deletion
 - Toggle annotation visibility without disabling annotation mode
 - Freeze page animations while annotating
-- Annotations persist in localStorage across sessions
+- Customizable highlight color (6 options)
+- Block page interactions toggle to prevent accidental clicks
+- Auto-clear after copy option in settings
+- Annotations persist in localStorage with configurable retention period
 - Light/dark mode with auto-detection
 - Svelte component detection (name, file, line, component chain)
 - Keyboard shortcuts (Escape to deselect/close)
+
+## MCP Integration
+
+annotaKit can connect to an MCP server so AI agents (Claude Desktop, Claude Code, etc.) can receive and respond to your annotations in real time.
+
+Install `@annotakit/mcp` and pass the server URL:
+
+```svelte
+<Annotakit mcpServerUrl="http://localhost:4156" />
+```
+
+A status dot in the settings panel shows whether the MCP server is connected. See the [`@annotakit/mcp` README](../mcp/README.md) for full setup.
 
 ## License
 © 2026 nodestarQ
