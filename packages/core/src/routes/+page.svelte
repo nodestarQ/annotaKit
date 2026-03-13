@@ -75,7 +75,7 @@
 			<!-- Form -->
 			<section id="form" class="mb-10">
 				<h2 class="mb-3 text-xs font-medium uppercase tracking-wider text-annotakit-text/40 dark:text-annotakit-text-dark/40">Form Elements</h2>
-				<form class="space-y-4 rounded-lg border-2 border-annotakit-text/80 bg-white p-5 dark:border-annotakit-text-dark/30 dark:bg-annotakit-surface-dark" onsubmit={(e) => e.preventDefault()}>
+				<form class="space-y-4 rounded-lg border-2 border-annotakit-text/80 bg-white p-5 dark:border-annotakit-text-dark/30 dark:bg-annotakit-surface-dark" onsubmit={(e) => { e.preventDefault(); alert('Submit button has been clicked, if you want to block interactions do so in the settings'); }}>
 					<div>
 						<label for="name" class="mb-1 block text-sm font-medium text-annotakit-text/70 dark:text-annotakit-text-dark/70">Name</label>
 						<input
@@ -163,10 +163,10 @@
 			<section id="accessibility" class="mb-10">
 				<h2 class="mb-3 text-xs font-medium uppercase tracking-wider text-annotakit-text/40 dark:text-annotakit-text-dark/40">Accessibility</h2>
 				<div class="flex items-center justify-center gap-4">
-					<button role="tab" aria-label="Settings tab" class="rounded border-2 border-annotakit-text/80 px-4 py-2 text-sm text-annotakit-text/70 transition-all duration-300 ease-out hover:bg-annotakit-text hover:text-white dark:border-annotakit-text-dark/30 dark:text-annotakit-text-dark/70 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark">
+					<button role="tab" aria-label="Settings tab" class="rounded border-2 border-annotakit-text/80 px-4 py-2 text-sm text-annotakit-text/70 transition-all duration-300 ease-out hover:bg-annotakit-text hover:text-white dark:border-annotakit-text-dark/30 dark:text-annotakit-text-dark/70 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark" onclick={() => alert('Settings tab has been clicked, if you want to block interactions do so in the settings')}>
 						Settings
 					</button>
-					<button role="tab" aria-label="Profile tab" class="rounded border-2 border-annotakit-text/80 px-4 py-2 text-sm text-annotakit-text/70 transition-all duration-300 ease-out hover:bg-annotakit-text hover:text-white dark:border-annotakit-text-dark/30 dark:text-annotakit-text-dark/70 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark">
+					<button role="tab" aria-label="Profile tab" class="rounded border-2 border-annotakit-text/80 px-4 py-2 text-sm text-annotakit-text/70 transition-all duration-300 ease-out hover:bg-annotakit-text hover:text-white dark:border-annotakit-text-dark/30 dark:text-annotakit-text-dark/70 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark" onclick={() => alert('Profile tab has been clicked, if you want to block interactions do so in the settings')}>
 						Profile
 					</button>
 					<img src="https://placehold.co/120x80" alt="Sample placeholder" class="rounded-lg" />

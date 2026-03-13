@@ -24,6 +24,7 @@ class AnnotakitState {
 	outputFormat = $state<OutputFormat>('standard');
 	theme = $state<AnnotakitTheme>('auto');
 	highlightColor = $state<AnnotakitColor>('green');
+	blockInteractions = $state(false);
 	storageKey = $state('annotakit');
 	retentionDays = $state(7);
 

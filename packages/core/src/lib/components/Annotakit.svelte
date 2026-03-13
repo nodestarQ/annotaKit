@@ -66,6 +66,14 @@
 		saveHighlightColor(annotakitState.storageKey, annotakitState.highlightColor);
 	});
 
+	// Persist block interactions setting
+	$effect(() => {
+		if (!mounted) return;
+		try {
+			localStorage.setItem(annotakitState.storageKey + ':block-interactions', String(annotakitState.blockInteractions));
+		} catch { /* storage unavailable */ }
+	});
+
 	// Toggle crosshair cursor on body
 	$effect(() => {
 		if (!mounted) return;
@@ -112,6 +120,10 @@
 		annotakitState.loadFromStorage();
 		const savedColor = loadHighlightColor(annotakitState.storageKey);
 		if (savedColor) annotakitState.highlightColor = savedColor;
+		try {
+			const savedBlock = localStorage.getItem(annotakitState.storageKey + ':block-interactions');
+			if (savedBlock === 'true') annotakitState.blockInteractions = true;
+		} catch { /* storage unavailable */ }
 		document.addEventListener('keydown', handleKeyDown);
 		return () => {
 			document.removeEventListener('keydown', handleKeyDown);

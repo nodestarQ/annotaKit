@@ -217,17 +217,30 @@
 		}
 	}
 
+	function blockInteraction(e: Event) {
+		if (!annotakitState.isActive || !annotakitState.blockInteractions) return;
+		if (isAnnotakitElement(e.target as Element)) return;
+		e.preventDefault();
+		e.stopPropagation();
+	}
+
 	onMount(() => {
 		document.addEventListener('mousemove', handleMouseMove, true);
 		document.addEventListener('pointerdown', handlePointerDown, true);
 		document.addEventListener('pointermove', handlePointerMove, true);
 		document.addEventListener('pointerup', handlePointerUp, true);
+		document.addEventListener('click', blockInteraction, true);
+		document.addEventListener('auxclick', blockInteraction, true);
+		document.addEventListener('submit', blockInteraction, true);
 
 		return () => {
 			document.removeEventListener('mousemove', handleMouseMove, true);
 			document.removeEventListener('pointerdown', handlePointerDown, true);
 			document.removeEventListener('pointermove', handlePointerMove, true);
 			document.removeEventListener('pointerup', handlePointerUp, true);
+			document.removeEventListener('click', blockInteraction, true);
+			document.removeEventListener('auxclick', blockInteraction, true);
+			document.removeEventListener('submit', blockInteraction, true);
 			if (dragRafId !== null) cancelAnimationFrame(dragRafId);
 			if (hoverRafId !== null) cancelAnimationFrame(hoverRafId);
 		};
