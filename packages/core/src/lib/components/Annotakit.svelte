@@ -50,7 +50,7 @@
 		annotakitState.mcpServerUrl = mcpServerUrl ?? null;
 	});
 
-	// MCP health polling
+	// MCP health polling with backoff to avoid console noise when server is down
 	$effect(() => {
 		const url = annotakitState.mcpServerUrl;
 		if (!url || !mounted) {
@@ -59,22 +59,27 @@
 		}
 
 		let active = true;
+		let timeout: ReturnType<typeof setTimeout>;
+		const CONNECTED_INTERVAL = 5000;
+		const DISCONNECTED_INTERVAL = 30000;
 
 		async function check() {
 			try {
-				const res = await fetch(`${url.replace(/\/$/, '')}/api/health`, { signal: AbortSignal.timeout(3000) });
+				const res = await fetch(`${url!.replace(/\/$/, '')}/api/health`, { signal: AbortSignal.timeout(3000) });
 				if (active) annotakitState.mcpConnected = res.ok;
 			} catch {
 				if (active) annotakitState.mcpConnected = false;
 			}
+			if (active) {
+				timeout = setTimeout(check, annotakitState.mcpConnected ? CONNECTED_INTERVAL : DISCONNECTED_INTERVAL);
+			}
 		}
 
 		check();
-		const interval = setInterval(check, 5000);
 
 		return () => {
 			active = false;
-			clearInterval(interval);
+			clearTimeout(timeout);
 			annotakitState.mcpConnected = false;
 		};
 	});
