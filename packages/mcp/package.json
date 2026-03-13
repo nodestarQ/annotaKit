@@ -1,8 +1,36 @@
 {
   "name": "@annotakit/mcp",
   "version": "0.1.0",
-  "private": true,
-  "description": "MCP server for Annotakit (future)",
+  "description": "MCP server for annotaKit - exposes browser annotations to AI agents",
   "type": "module",
-  "license": "MIT"
+  "license": "MIT",
+  "bin": {
+    "annotakit-mcp": "./dist/bin.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/server.d.ts",
+      "default": "./dist/server.js"
+    },
+    "./bridge": {
+      "types": "./dist/bridge.d.ts",
+      "default": "./dist/bridge.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.0",
+    "@types/node": "^22.0.0",
+    "annotakit": "workspace:*"
+  }
 }

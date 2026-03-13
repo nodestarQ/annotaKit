@@ -6,4 +6,4 @@
 </script>
 
 {@render children()}
-<Annotakit position="bottom-right" outputFormat="standard" theme="auto" />
+<Annotakit position="bottom-right" outputFormat="standard" theme="auto" mcpServerUrl="http://localhost:4156" />

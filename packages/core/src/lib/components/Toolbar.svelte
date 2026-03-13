@@ -71,6 +71,7 @@
 		if (ok) {
 			annotakitState.copyFeedback = true;
 			setTimeout(() => (annotakitState.copyFeedback = false), 1500);
+			if (annotakitState.autoClearAfterCopy) annotakitState.clearAll();
 		}
 	}
 </script>
@@ -94,6 +95,20 @@
 			</div>
 
 			<div class="space-y-2 p-3">
+				{#if annotakitState.mcpServerUrl}
+					<div class="flex items-center justify-between">
+						<div class="text-[10px] font-medium uppercase tracking-wider text-annotakit-text/50">MCP Server</div>
+						<div class="flex items-center gap-1.5">
+							<span class="text-[10px] text-annotakit-text/50">{annotakitState.mcpConnected ? 'Connected' : 'Disconnected'}</span>
+							<span
+								class="h-2 w-2 rounded-full {annotakitState.mcpConnected ? 'bg-green-500' : 'bg-annotakit-text/25'}"
+							></span>
+						</div>
+					</div>
+
+					<div class="h-px bg-annotakit-text/10"></div>
+				{/if}
+
 				<div>
 					<div class="mb-1 text-[10px] font-medium uppercase tracking-wider text-annotakit-text/50">Output format</div>
 					<div class="flex gap-2">
@@ -143,6 +158,25 @@
 					>
 						<span
 							class="absolute top-0.5 left-0.5 h-3 w-3 rounded-full bg-white transition-transform duration-300 ease-out {annotakitState.blockInteractions ? 'translate-x-4' : ''}"
+						></span>
+					</button>
+				</label>
+
+				<div class="h-px bg-annotakit-text/10"></div>
+
+				<label class="flex cursor-pointer items-center justify-between">
+					<span class="text-[10px] font-medium uppercase tracking-wider text-annotakit-text/50">Auto-clear after copy</span>
+					<button
+						role="switch"
+						aria-checked={annotakitState.autoClearAfterCopy}
+						aria-label="Clear annotations after export"
+						class="relative h-5 w-9 rounded-full border-2 border-annotakit-stroke transition-colors duration-300 ease-out {annotakitState.autoClearAfterCopy
+							? 'bg-annotakit-primary'
+							: 'bg-annotakit-text/15'}"
+						onclick={() => (annotakitState.autoClearAfterCopy = !annotakitState.autoClearAfterCopy)}
+					>
+						<span
+							class="absolute top-0.5 left-0.5 h-3 w-3 rounded-full bg-white transition-transform duration-300 ease-out {annotakitState.autoClearAfterCopy ? 'translate-x-4' : ''}"
 						></span>
 					</button>
 				</label>

@@ -16,6 +16,7 @@
 		retentionDays?: number;
 		enabled?: boolean;
 		minimized?: boolean;
+		mcpServerUrl?: string;
 		onOutput?: (markdown: string) => void;
 	}
 
@@ -28,6 +29,7 @@
 		retentionDays = 7,
 		enabled = true,
 		minimized = false,
+		mcpServerUrl,
 		onOutput
 	}: Props = $props();
 
@@ -45,6 +47,41 @@
 		annotakitState.retentionDays = retentionDays;
 		annotakitState.enabled = enabled;
 		annotakitState.minimized = minimized;
+		annotakitState.mcpServerUrl = mcpServerUrl ?? null;
+	});
+
+	// MCP health polling with backoff to avoid console noise when server is down
+	$effect(() => {
+		const url = annotakitState.mcpServerUrl;
+		if (!url || !mounted) {
+			annotakitState.mcpConnected = false;
+			return;
+		}
+
+		let active = true;
+		let timeout: ReturnType<typeof setTimeout>;
+		const CONNECTED_INTERVAL = 5000;
+		const DISCONNECTED_INTERVAL = 30000;
+
+		async function check() {
+			try {
+				const res = await fetch(`${url!.replace(/\/$/, '')}/api/health`, { signal: AbortSignal.timeout(3000) });
+				if (active) annotakitState.mcpConnected = res.ok;
+			} catch {
+				if (active) annotakitState.mcpConnected = false;
+			}
+			if (active) {
+				timeout = setTimeout(check, annotakitState.mcpConnected ? CONNECTED_INTERVAL : DISCONNECTED_INTERVAL);
+			}
+		}
+
+		check();
+
+		return () => {
+			active = false;
+			clearTimeout(timeout);
+			annotakitState.mcpConnected = false;
+		};
 	});
 
 	// Resolve theme and set data attribute
@@ -73,6 +110,14 @@
 		if (!mounted) return;
 		try {
 			localStorage.setItem(annotakitState.storageKey + ':block-interactions', String(annotakitState.blockInteractions));
+		} catch { /* storage unavailable */ }
+	});
+
+	// Persist auto-clear setting
+	$effect(() => {
+		if (!mounted) return;
+		try {
+			localStorage.setItem(annotakitState.storageKey + ':auto-clear-after-copy', String(annotakitState.autoClearAfterCopy));
 		} catch { /* storage unavailable */ }
 	});
 
@@ -125,6 +170,8 @@
 		try {
 			const savedBlock = localStorage.getItem(annotakitState.storageKey + ':block-interactions');
 			if (savedBlock === 'true') annotakitState.blockInteractions = true;
+			const savedAutoClear = localStorage.getItem(annotakitState.storageKey + ':auto-clear-after-copy');
+			if (savedAutoClear === 'true') annotakitState.autoClearAfterCopy = true;
 		} catch { /* storage unavailable */ }
 		document.addEventListener('keydown', handleKeyDown);
 		return () => {
