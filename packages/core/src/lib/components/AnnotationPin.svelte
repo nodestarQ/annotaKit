@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Annotation } from '../types.js';
 	import { annotakitState } from '../state.svelte.js';
+	import Icon from './Icon.svelte';
 
 	interface Props {
 		annotation: Annotation;
@@ -50,13 +51,16 @@
 {#if position}
 	<button
 		data-annotakit="pin"
-		class="pointer-events-auto fixed z-[99998] flex h-6 w-6 items-center justify-center rounded-md text-xs font-bold text-white shadow-md transition-transform {isSelected
+		class="group pointer-events-auto fixed z-[99998] flex h-6 w-6 cursor-pointer items-center justify-center rounded-md text-xs font-bold text-white shadow-md transition-transform {isSelected
 			? 'scale-125 bg-annotakit-primary-dark ring-2 ring-white'
 			: 'bg-annotakit-primary hover:scale-110'}"
 		style="top: {position.top}px; right: {position.right}px;"
 		onclick={handleClick}
 		title="Annotation #{index + 1}"
 	>
-		{index + 1}
+		<span class="pointer-events-none group-hover:hidden">{index + 1}</span>
+		<span class="pointer-events-none hidden group-hover:block">
+			<Icon name="pencil" size={12} />
+		</span>
 	</button>
 {/if}

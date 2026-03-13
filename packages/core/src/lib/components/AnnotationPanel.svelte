@@ -1,17 +1,34 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
+	import { untrack } from 'svelte';
 	import { annotakitState } from '../state.svelte.js';
 	import Icon from './Icon.svelte';
 
 	let annotation = $derived(annotakitState.activeAnnotation);
 
 	let commentValue = $state('');
+	let originalComment = $state('');
 	let showDetails = $state(false);
 
+	let isEditing = $derived(originalComment.trim().length > 0);
+	let hasChanges = $derived(commentValue.trim() !== originalComment.trim());
+
 	$effect(() => {
-		if (annotation) {
-			commentValue = annotation.comment;
+		const id = annotakitState.selectedAnnotationId;
+		if (id) {
+			// Read comment without subscribing to annotation changes
+			const comment = untrack(() => {
+				const current = annotakitState.annotations.find((a) => a.id === id);
+				return current?.comment ?? '';
+			});
+			commentValue = comment;
+			originalComment = comment;
 		}
+
+		return () => {
+			commentValue = '';
+			originalComment = '';
+		};
 	});
 
 	function handleCommentInput(e: Event) {
@@ -29,7 +46,15 @@
 	}
 
 	function handleClose() {
-		if (!commentValue.trim()) return;
+		annotakitState.selectAnnotation(null);
+	}
+
+	function handleAddOrUpdate() {
+		if (isEditing) {
+			if (!hasChanges) return;
+		} else {
+			if (!commentValue.trim()) return;
+		}
 		annotakitState.selectAnnotation(null);
 	}
 </script>
@@ -141,19 +166,42 @@
 
 				<!-- Actions -->
 				<div class="flex gap-2">
-					<button
-						class="flex-1 rounded border-2 border-annotakit-stroke px-3 py-1.5 text-xs font-medium text-annotakit-text/70 transition-all duration-300 ease-out hover:bg-annotakit-text hover:text-annotakit-surface"
-						onclick={handleDelete}
-					>
-						Cancel
-					</button>
-					<button
-						class="flex-1 rounded border-2 border-annotakit-stroke px-3 py-1.5 text-xs font-medium transition-all duration-300 ease-out {commentValue.trim() ? 'bg-annotakit-text text-annotakit-surface hover:bg-annotakit-primary cursor-pointer' : 'bg-annotakit-text/30 text-annotakit-surface/50 cursor-not-allowed'}"
-						onclick={handleClose}
-						disabled={!commentValue.trim()}
-					>
-						Add
-					</button>
+					{#if isEditing}
+						<button
+							class="flex items-center justify-center rounded border-2 border-annotakit-stroke px-2 py-1.5 text-annotakit-text/70 transition-all duration-300 ease-out hover:bg-red-500 hover:border-red-500 hover:text-white"
+							onclick={handleDelete}
+							title="Delete annotation"
+						>
+							<Icon name="trash" size={14} />
+						</button>
+						<button
+							class="flex-1 rounded border-2 border-annotakit-stroke px-3 py-1.5 text-xs font-medium text-annotakit-text/70 transition-all duration-300 ease-out hover:bg-annotakit-text hover:text-annotakit-surface"
+							onclick={handleClose}
+						>
+							Close
+						</button>
+						<button
+							class="flex-1 rounded border-2 border-annotakit-stroke px-3 py-1.5 text-xs font-medium transition-all duration-300 ease-out {hasChanges ? 'bg-annotakit-text text-annotakit-surface hover:bg-annotakit-primary cursor-pointer' : 'bg-annotakit-text/30 text-annotakit-surface/50 cursor-not-allowed'}"
+							onclick={handleAddOrUpdate}
+							disabled={!hasChanges}
+						>
+							Update
+						</button>
+					{:else}
+						<button
+							class="flex-1 rounded border-2 border-annotakit-stroke px-3 py-1.5 text-xs font-medium text-annotakit-text/70 transition-all duration-300 ease-out hover:bg-annotakit-text hover:text-annotakit-surface"
+							onclick={handleDelete}
+						>
+							Cancel
+						</button>
+						<button
+							class="flex-1 rounded border-2 border-annotakit-stroke px-3 py-1.5 text-xs font-medium transition-all duration-300 ease-out {commentValue.trim() ? 'bg-annotakit-text text-annotakit-surface hover:bg-annotakit-primary cursor-pointer' : 'bg-annotakit-text/30 text-annotakit-surface/50 cursor-not-allowed'}"
+							onclick={handleAddOrUpdate}
+							disabled={!commentValue.trim()}
+						>
+							Add
+						</button>
+					{/if}
 				</div>
 			</div>
 		</div>
