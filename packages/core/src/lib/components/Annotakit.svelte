@@ -16,6 +16,7 @@
 		retentionDays?: number;
 		enabled?: boolean;
 		minimized?: boolean;
+		mcpServerUrl?: string;
 		onOutput?: (markdown: string) => void;
 	}
 
@@ -28,6 +29,7 @@
 		retentionDays = 7,
 		enabled = true,
 		minimized = false,
+		mcpServerUrl,
 		onOutput
 	}: Props = $props();
 
@@ -45,6 +47,36 @@
 		annotakitState.retentionDays = retentionDays;
 		annotakitState.enabled = enabled;
 		annotakitState.minimized = minimized;
+		annotakitState.mcpServerUrl = mcpServerUrl ?? null;
+	});
+
+	// MCP health polling
+	$effect(() => {
+		const url = annotakitState.mcpServerUrl;
+		if (!url || !mounted) {
+			annotakitState.mcpConnected = false;
+			return;
+		}
+
+		let active = true;
+
+		async function check() {
+			try {
+				const res = await fetch(`${url.replace(/\/$/, '')}/api/health`, { signal: AbortSignal.timeout(3000) });
+				if (active) annotakitState.mcpConnected = res.ok;
+			} catch {
+				if (active) annotakitState.mcpConnected = false;
+			}
+		}
+
+		check();
+		const interval = setInterval(check, 5000);
+
+		return () => {
+			active = false;
+			clearInterval(interval);
+			annotakitState.mcpConnected = false;
+		};
 	});
 
 	// Resolve theme and set data attribute

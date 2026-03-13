@@ -94,6 +94,20 @@
 			</div>
 
 			<div class="space-y-2 p-3">
+				{#if annotakitState.mcpServerUrl}
+					<div class="flex items-center justify-between">
+						<div class="text-[10px] font-medium uppercase tracking-wider text-annotakit-text/50">MCP Server</div>
+						<div class="flex items-center gap-1.5">
+							<span class="text-[10px] text-annotakit-text/50">{annotakitState.mcpConnected ? 'Connected' : 'Disconnected'}</span>
+							<span
+								class="h-2 w-2 rounded-full {annotakitState.mcpConnected ? 'bg-green-500' : 'bg-annotakit-text/25'}"
+							></span>
+						</div>
+					</div>
+
+					<div class="h-px bg-annotakit-text/10"></div>
+				{/if}
+
 				<div>
 					<div class="mb-1 text-[10px] font-medium uppercase tracking-wider text-annotakit-text/50">Output format</div>
 					<div class="flex gap-2">

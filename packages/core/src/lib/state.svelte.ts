@@ -38,6 +38,10 @@ class AnnotakitState {
 	storageKey = $state('annotakit');
 	retentionDays = $state(7);
 
+	// MCP
+	mcpServerUrl = $state<string | null>(null);
+	mcpConnected = $state(false);
+
 	// Transient UI
 	selectedAnnotationId = $state<string | null>(null);
 	showOutputDialog = $state(false);
