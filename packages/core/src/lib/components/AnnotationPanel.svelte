@@ -29,6 +29,7 @@
 	}
 
 	function handleClose() {
+		if (!commentValue.trim()) return;
 		annotakitState.selectAnnotation(null);
 	}
 </script>
@@ -147,8 +148,9 @@
 						Cancel
 					</button>
 					<button
-						class="flex-1 rounded border-2 border-annotakit-stroke bg-annotakit-text px-3 py-1.5 text-xs font-medium text-annotakit-surface transition-all duration-300 ease-out hover:bg-annotakit-primary"
+						class="flex-1 rounded border-2 border-annotakit-stroke px-3 py-1.5 text-xs font-medium transition-all duration-300 ease-out {commentValue.trim() ? 'bg-annotakit-text text-annotakit-surface hover:bg-annotakit-primary cursor-pointer' : 'bg-annotakit-text/30 text-annotakit-surface/50 cursor-not-allowed'}"
 						onclick={handleClose}
+						disabled={!commentValue.trim()}
 					>
 						Add
 					</button>

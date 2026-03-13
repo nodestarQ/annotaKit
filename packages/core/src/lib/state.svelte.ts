@@ -62,6 +62,10 @@ class AnnotakitState {
 
 	// Methods
 	addAnnotation(annotation: Annotation): void {
+		// Auto-cancel previous annotation if it has no comment
+		if (this.activeAnnotation && !this.activeAnnotation.comment.trim()) {
+			this.annotations = this.annotations.filter((a) => a.id !== this.activeAnnotation!.id);
+		}
 		this.annotations = [...this.annotations, annotation];
 		this.selectedAnnotationId = annotation.id;
 		this.saveToStorage();
