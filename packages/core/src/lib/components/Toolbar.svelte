@@ -102,7 +102,7 @@
 								class="flex-1 rounded border-2 border-annotakit-stroke px-3 py-1.5 text-xs font-medium transition-all duration-300 ease-out {annotakitState.outputFormat === fmt.value
 									? BTN_ACTIVE
 									: 'text-annotakit-text/70 hover:bg-annotakit-text hover:text-annotakit-surface'}"
-								onclick={() => (annotakitState.outputFormat = fmt.value)}
+								onclick={() => annotakitState.setOutputFormat(fmt.value)}
 							>
 								{fmt.label}
 							</button>

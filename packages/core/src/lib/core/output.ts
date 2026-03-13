@@ -11,28 +11,66 @@ export const FORMAT_OPTIONS: { value: OutputFormat; label: string }[] = [
 	{ value: 'detailed', label: 'Detailed' }
 ];
 
+/**
+ * Convert rgb()/rgba() to hex. Pass through hex and named colors.
+ */
+function normalizeColor(raw: string): string {
+	const rgbaMatch = raw.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(?:,\s*([\d.]+))?\s*\)$/);
+	if (!rgbaMatch) return raw;
+
+	const r = parseInt(rgbaMatch[1]);
+	const g = parseInt(rgbaMatch[2]);
+	const b = parseInt(rgbaMatch[3]);
+	const a = rgbaMatch[4] !== undefined ? parseFloat(rgbaMatch[4]) : undefined;
+
+	const hex = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+
+	if (a !== undefined && a < 1) {
+		const alphaByte = Math.round(a * 255);
+		return `${hex}${alphaByte.toString(16).padStart(2, '0')}`;
+	}
+
+	return hex;
+}
+
+/**
+ * Strip quotes and trim to the first font-family token.
+ */
+function normalizeFont(family: string): string {
+	const first = family.split(',')[0];
+	return first.replace(/^["']|["']$/g, '').trim();
+}
+
 function formatCompact(annotation: Annotation, index: number): string {
-	const parts = [`${index + 1}.`];
+	const lines: string[] = [];
+
+	// First line: number and selector
+	let firstLine = `${index + 1}.`;
 	if (annotation.mode === 'multi' && annotation.elements && annotation.elements.length > 1) {
-		parts.push(`[${annotation.elements.map((el) => `\`${el.selector}\``).join(', ')}]`);
+		firstLine += ` [${annotation.elements.map((el) => `\`${el.selector}\``).join(', ')}]`;
 	} else {
-		parts.push(`\`${annotation.element.selector}\``);
+		firstLine += ` \`${annotation.element.selector}\``;
 		if (annotation.element.svelte) {
-			parts.push(`(${annotation.element.svelte.name})`);
+			firstLine += ` (${annotation.element.svelte.name})`;
 		}
 	}
+	lines.push(firstLine);
+
 	if (annotation.comment) {
-		parts.push(`- ${annotation.comment}`);
+		lines.push(`   - ${annotation.comment}`);
 	}
 	if (annotation.textSelection) {
-		parts.push(`[selected: "${annotation.textSelection.text.slice(0, 60)}"]`);
+		const text = annotation.textSelection.text;
+		const truncated = text.length > 60 ? text.slice(0, 60) + '...' : text;
+		lines.push(`   - Selected: "${truncated}"`);
 	}
-	return parts.join(' ');
+
+	return lines.join('\n');
 }
 
 function formatStandard(annotation: Annotation, index: number): string {
 	const lines: string[] = [];
-	lines.push(`### ${index + 1}. ${annotation.element.tagName}${annotation.element.id ? `#${annotation.element.id}` : ''}`);
+	lines.push(`## ${index + 1}. ${annotation.element.tagName}${annotation.element.id ? `#${annotation.element.id}` : ''}`);
 	lines.push('');
 
 	if (annotation.mode === 'multi' && annotation.elements && annotation.elements.length > 1) {
@@ -58,10 +96,9 @@ function formatStandard(annotation: Annotation, index: number): string {
 
 	const a11y = annotation.element.accessibility;
 	if (a11y.role || a11y.ariaLabel) {
-		const parts: string[] = [];
-		if (a11y.role) parts.push(`role="${a11y.role}"`);
-		if (a11y.ariaLabel) parts.push(`aria-label="${a11y.ariaLabel}"`);
-		lines.push(`- **Accessibility:** ${parts.join(', ')}`);
+		lines.push(`- **Accessibility:**`);
+		if (a11y.role) lines.push(`  - Role: ${a11y.role}`);
+		if (a11y.ariaLabel) lines.push(`  - Aria label: ${a11y.ariaLabel}`);
 	}
 
 	return lines.join('\n');
@@ -69,7 +106,7 @@ function formatStandard(annotation: Annotation, index: number): string {
 
 function formatDetailed(annotation: Annotation, index: number): string {
 	const lines: string[] = [];
-	lines.push(`### ${index + 1}. ${annotation.element.tagName}${annotation.element.id ? `#${annotation.element.id}` : ''}`);
+	lines.push(`## ${index + 1}. ${annotation.element.tagName}${annotation.element.id ? `#${annotation.element.id}` : ''}`);
 	lines.push('');
 
 	if (annotation.mode === 'multi' && annotation.elements && annotation.elements.length > 1) {
@@ -92,7 +129,7 @@ function formatDetailed(annotation: Annotation, index: number): string {
 	if (annotation.textSelection) {
 		lines.push(`- **Selected text:** "${annotation.textSelection.text}"`);
 		if (annotation.textSelection.contextBefore || annotation.textSelection.contextAfter) {
-			lines.push(`- **Context:** ...${annotation.textSelection.contextBefore}**[${annotation.textSelection.text}]**${annotation.textSelection.contextAfter}...`);
+			lines.push(`- **Context:** "...${annotation.textSelection.contextBefore} **${annotation.textSelection.text}** ${annotation.textSelection.contextAfter}..."`);
 		}
 	}
 
@@ -104,21 +141,24 @@ function formatDetailed(annotation: Annotation, index: number): string {
 	const r = annotation.element.rect;
 	lines.push(`- **Dimensions:** ${Math.round(r.width)}×${Math.round(r.height)} at (${Math.round(r.x)}, ${Math.round(r.y)})`);
 
-	// Computed styles
+	// Computed styles - normalized and grouped
 	const s = annotation.element.styles;
+	const color = normalizeColor(s.color);
+	const bg = normalizeColor(s.backgroundColor);
+	const font = normalizeFont(s.fontFamily);
+
 	lines.push(`- **Styles:**`);
-	lines.push(`  - color: ${s.color}`);
-	lines.push(`  - background: ${s.backgroundColor}`);
-	lines.push(`  - font: ${s.fontWeight} ${s.fontSize} ${s.fontFamily.split(',')[0]}`);
-	lines.push(`  - display: ${s.display}, position: ${s.position}`);
-	lines.push(`  - padding: ${s.padding}, margin: ${s.margin}`);
+	lines.push(`  - Color: \`${color}\`, Background: \`${bg}\``);
+	lines.push(`  - Font: ${s.fontWeight} ${s.fontSize} ${font}`);
+	lines.push(`  - Layout: ${s.display}, ${s.position}`);
+	lines.push(`  - Spacing: padding ${s.padding}, margin ${s.margin}`);
 
 	const a11y = annotation.element.accessibility;
 	if (a11y.role || a11y.ariaLabel || a11y.alt) {
 		lines.push(`- **Accessibility:**`);
-		if (a11y.role) lines.push(`  - role: ${a11y.role}`);
-		if (a11y.ariaLabel) lines.push(`  - aria-label: ${a11y.ariaLabel}`);
-		if (a11y.alt) lines.push(`  - alt: ${a11y.alt}`);
+		if (a11y.role) lines.push(`  - Role: ${a11y.role}`);
+		if (a11y.ariaLabel) lines.push(`  - Aria label: ${a11y.ariaLabel}`);
+		if (a11y.alt) lines.push(`  - Alt: ${a11y.alt}`);
 	}
 
 	return lines.join('\n');
@@ -131,7 +171,9 @@ export function generateMarkdown(
 	if (annotations.length === 0) return '<!-- No annotations -->';
 
 	const lines: string[] = [];
-	lines.push('## Annotakit Feedback');
+	lines.push('# annotaKit Feedback');
+	lines.push('');
+	lines.push(`${annotations.length} annotation${annotations.length !== 1 ? 's' : ''}, ${format} format`);
 	lines.push('');
 
 	const formatter =
@@ -143,7 +185,13 @@ export function generateMarkdown(
 
 	for (let i = 0; i < annotations.length; i++) {
 		lines.push(formatter(annotations[i], i));
-		if (format !== 'compact') lines.push('');
+		if (format !== 'compact') {
+			lines.push('');
+			if (i < annotations.length - 1) {
+				lines.push('---');
+				lines.push('');
+			}
+		}
 	}
 
 	return lines.join('\n');

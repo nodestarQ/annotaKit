@@ -12,6 +12,16 @@ import type {
 } from './types.js';
 import { loadAnnotations, saveAnnotations, clearAnnotations } from './core/annotation.js';
 
+const OUTPUT_FORMAT_KEY = 'annotakit-output-format';
+const VALID_FORMATS: OutputFormat[] = ['compact', 'standard', 'detailed'];
+
+function loadOutputFormat(): OutputFormat {
+	if (typeof window === 'undefined') return 'standard';
+	const stored = localStorage.getItem(OUTPUT_FORMAT_KEY);
+	if (stored && VALID_FORMATS.includes(stored as OutputFormat)) return stored as OutputFormat;
+	return 'standard';
+}
+
 class AnnotakitState {
 	// Core
 	enabled = $state(true);
@@ -21,7 +31,7 @@ class AnnotakitState {
 
 	// Config
 	position = $state<AnnotakitPosition>('bottom-right');
-	outputFormat = $state<OutputFormat>('standard');
+	outputFormat = $state<OutputFormat>(loadOutputFormat());
 	theme = $state<AnnotakitTheme>('auto');
 	highlightColor = $state<AnnotakitColor>('green');
 	blockInteractions = $state(false);
@@ -95,6 +105,13 @@ class AnnotakitState {
 			this.selectedAnnotationId = null;
 		}
 		this.minimized = !this.minimized;
+	}
+
+	setOutputFormat(format: OutputFormat): void {
+		this.outputFormat = format;
+		if (typeof window !== 'undefined') {
+			localStorage.setItem(OUTPUT_FORMAT_KEY, format);
+		}
 	}
 
 	selectAnnotation(id: string | null): void {
