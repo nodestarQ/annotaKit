@@ -45,9 +45,9 @@
 			onclick={() => (showDetails = !showDetails)}
 		>
 			<Icon
-				name="chevron-down"
+				name="chevron-right"
 				size={12}
-				class="shrink-0 text-annotakit-text/40 transition-all duration-300 ease-out group-hover:text-annotakit-surface {showDetails ? '' : 'rotate-180'}"
+				class="shrink-0 text-annotakit-text/40 transition-all duration-300 ease-out group-hover:text-annotakit-surface {showDetails ? 'rotate-90' : ''}"
 			/>
 			<span class="flex-1 truncate font-mono text-xs font-medium text-annotakit-text transition-all duration-300 ease-out group-hover:text-annotakit-surface">
 				{annotation.element.tagName}{#if annotation.element.id}#{annotation.element.id}{/if}
