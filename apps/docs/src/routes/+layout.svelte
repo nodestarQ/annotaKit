@@ -23,7 +23,10 @@
 		},
 		{
 			section: 'Reference',
-			links: [{ label: 'Features', href: '/docs/features' }]
+			links: [
+				{ label: 'Features', href: '/docs/features' },
+				{ label: 'MCP Integration', href: '/docs/mcp' }
+			]
 		}
 	];
 

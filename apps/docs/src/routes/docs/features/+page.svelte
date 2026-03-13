@@ -65,12 +65,40 @@
 
 <h3>Settings panel</h3>
 <p>
-	Configure the output format from the built-in settings panel.
+	Configure output format, highlight color, block page interactions, auto-clear after copy,
+	and MCP server status from the built-in settings panel.
+</p>
+
+<h3>Inline editing</h3>
+<p>
+	Edit, update, and delete annotations directly from the annotation panel. Hover over a pin
+	to reveal the edit icon.
+</p>
+
+<h3>Quick copy</h3>
+<p>
+	Copy all annotations as markdown directly from the toolbar without opening the output dialog.
+</p>
+
+<h3>Auto-clear after copy</h3>
+<p>
+	Enable in settings to automatically clear all annotations after copying markdown to the clipboard.
 </p>
 
 <h3>Clear all</h3>
 <p>
 	Remove all annotations with a confirmation step to prevent accidental deletion.
+</p>
+
+<h3>Highlight color</h3>
+<p>
+	Choose from six highlight colors (green, blue, purple, red, orange, yellow) in the settings panel.
+	Your choice persists across sessions.
+</p>
+
+<h3>Block page interactions</h3>
+<p>
+	Toggle in settings to prevent accidental clicks on page elements while annotating.
 </p>
 
 <h2>Persistence</h2>

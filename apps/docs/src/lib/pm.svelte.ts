@@ -1,7 +1,7 @@
 export const managers = [
-	{ name: 'npm', command: 'npm install annotakit' },
-	{ name: 'pnpm', command: 'pnpm add annotakit' },
-	{ name: 'yarn', command: 'yarn add annotakit' }
+	{ name: 'npm', command: 'npm install annotakit', installMcp: 'npm install @annotakit/mcp' },
+	{ name: 'pnpm', command: 'pnpm add annotakit', installMcp: 'pnpm add @annotakit/mcp' },
+	{ name: 'yarn', command: 'yarn add annotakit', installMcp: 'yarn add @annotakit/mcp' }
 ] as const;
 
 let _active = $state(0);
@@ -15,5 +15,8 @@ export const pm = {
 	},
 	get command() {
 		return managers[_active].command;
+	},
+	get installMcp() {
+		return managers[_active].installMcp;
 	}
 };

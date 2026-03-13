@@ -92,10 +92,24 @@
 	</div>
 
 	<div class="space-y-2">
+		<h3 class="text-base font-semibold text-text"><code class="text-primary">highlightColor</code></h3>
+		<p class="text-text-muted text-sm">Annotation highlight color.</p>
+		<p class="text-text-muted text-sm"><strong class="text-text">Type:</strong> <code>'green' | 'blue' | 'purple' | 'red' | 'orange' | 'yellow'</code></p>
+		<p class="text-text-muted text-sm"><strong class="text-text">Default:</strong> <code>'green'</code></p>
+	</div>
+
+	<div class="space-y-2">
 		<h3 class="text-base font-semibold text-text"><code class="text-primary">minimized</code></h3>
 		<p class="text-text-muted text-sm">Start the toolbar collapsed.</p>
 		<p class="text-text-muted text-sm"><strong class="text-text">Type:</strong> <code>boolean</code></p>
 		<p class="text-text-muted text-sm"><strong class="text-text">Default:</strong> <code>false</code></p>
+	</div>
+
+	<div class="space-y-2">
+		<h3 class="text-base font-semibold text-text"><code class="text-primary">mcpServerUrl</code></h3>
+		<p class="text-text-muted text-sm">MCP server URL for the status indicator. Enables health polling when set.</p>
+		<p class="text-text-muted text-sm"><strong class="text-text">Type:</strong> <code>string</code></p>
+		<p class="text-text-muted text-sm"><strong class="text-text">Default:</strong> none</p>
 	</div>
 
 	<div class="space-y-2">
