@@ -1,4 +1,5 @@
 export { default as Annotakit } from './components/Annotakit.svelte';
+export { annotakitState } from './state.svelte.js';
 export type {
 	Annotation,
 	AnnotakitColor,
