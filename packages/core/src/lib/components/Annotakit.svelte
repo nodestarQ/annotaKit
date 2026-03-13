@@ -113,6 +113,14 @@
 		} catch { /* storage unavailable */ }
 	});
 
+	// Persist auto-clear setting
+	$effect(() => {
+		if (!mounted) return;
+		try {
+			localStorage.setItem(annotakitState.storageKey + ':auto-clear-after-copy', String(annotakitState.autoClearAfterCopy));
+		} catch { /* storage unavailable */ }
+	});
+
 	// Toggle crosshair cursor on body
 	$effect(() => {
 		if (!mounted) return;
@@ -162,6 +170,8 @@
 		try {
 			const savedBlock = localStorage.getItem(annotakitState.storageKey + ':block-interactions');
 			if (savedBlock === 'true') annotakitState.blockInteractions = true;
+			const savedAutoClear = localStorage.getItem(annotakitState.storageKey + ':auto-clear-after-copy');
+			if (savedAutoClear === 'true') annotakitState.autoClearAfterCopy = true;
 		} catch { /* storage unavailable */ }
 		document.addEventListener('keydown', handleKeyDown);
 		return () => {

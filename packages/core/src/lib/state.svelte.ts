@@ -35,6 +35,7 @@ class AnnotakitState {
 	theme = $state<AnnotakitTheme>('auto');
 	highlightColor = $state<AnnotakitColor>('green');
 	blockInteractions = $state(false);
+	autoClearAfterCopy = $state(false);
 	storageKey = $state('annotakit');
 	retentionDays = $state(7);
 

@@ -25,6 +25,12 @@
 			copied = true;
 			onOutput?.(markdown);
 			setTimeout(() => (copied = false), 2000);
+			if (annotakitState.autoClearAfterCopy) {
+				setTimeout(() => {
+					annotakitState.clearAll();
+					closeDialog();
+				}, 500);
+			}
 		}
 	}
 
