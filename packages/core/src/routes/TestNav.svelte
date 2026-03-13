@@ -12,6 +12,7 @@
 		<a
 			href={link.href}
 			class="rounded px-4 py-2 text-sm font-medium text-annotakit-text/50 transition-all duration-300 ease-out hover:bg-annotakit-text hover:text-white dark:text-annotakit-text-dark/50 dark:hover:bg-annotakit-text-dark dark:hover:text-annotakit-surface-dark"
+			onclick={(e) => { e.preventDefault(); alert(`${link.label} link has been clicked, if you want to block interactions do so in the settings`); }}
 		>
 			{link.label}
 		</a>

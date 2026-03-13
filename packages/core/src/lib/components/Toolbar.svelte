@@ -127,6 +127,25 @@
 						{/each}
 					</div>
 				</div>
+
+				<div class="h-px bg-annotakit-text/10"></div>
+
+				<label class="flex cursor-pointer items-center justify-between">
+					<span class="text-[10px] font-medium uppercase tracking-wider text-annotakit-text/50">Block page interactions</span>
+					<button
+						role="switch"
+						aria-checked={annotakitState.blockInteractions}
+						aria-label="Block page interactions"
+						class="relative h-5 w-9 rounded-full border-2 border-annotakit-stroke transition-colors duration-300 ease-out {annotakitState.blockInteractions
+							? 'bg-annotakit-primary'
+							: 'bg-annotakit-text/15'}"
+						onclick={() => (annotakitState.blockInteractions = !annotakitState.blockInteractions)}
+					>
+						<span
+							class="absolute top-0.5 left-0.5 h-3 w-3 rounded-full bg-white transition-transform duration-300 ease-out {annotakitState.blockInteractions ? 'translate-x-4' : ''}"
+						></span>
+					</button>
+				</label>
 			</div>
 		</div>
 	{/if}

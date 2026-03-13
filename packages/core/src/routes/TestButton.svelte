@@ -19,6 +19,7 @@
 <button
 	class="rounded px-4 py-2 text-sm font-medium transition-all duration-300 ease-out disabled:cursor-not-allowed disabled:opacity-50 {variantClasses[variant]}"
 	{disabled}
+	onclick={() => alert(`${variant} button has been clicked, if you want to block interactions do so in the settings`)}
 >
 	{@render children()}
 </button>
