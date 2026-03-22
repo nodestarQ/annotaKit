@@ -1,8 +1,8 @@
 /*
  * annotaKit theme tokens + source scanning
  *
- * Import 'annotakit/styles' for pre-compiled CSS (non-Tailwind consumers).
- * Import 'annotakit/theme' if you already use Tailwind and want your build
+ * Styles are auto-injected at runtime — no manual CSS import needed.
+ * Import 'annotakit/theme' only if you use Tailwind and want your build
  * to generate annotaKit's utility classes alongside your own.
  */
 

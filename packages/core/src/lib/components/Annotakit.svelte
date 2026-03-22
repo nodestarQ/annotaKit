@@ -3,6 +3,7 @@
 	import { annotakitState } from '../state.svelte.js';
 	import type { AnnotakitColor, AnnotakitPosition, OutputFormat, AnnotakitTheme } from '../types.js';
 	import { applyHighlightColor, clearHighlightColor, loadHighlightColor, saveHighlightColor } from '../core/colors.js';
+	import { annotakitCSS } from '../styles/generated-css.js';
 	import Toolbar from './Toolbar.svelte';
 	import OverlayLayer from './OverlayLayer.svelte';
 	import OutputDialog from './OutputDialog.svelte';
@@ -164,6 +165,16 @@
 
 	onMount(() => {
 		mounted = true;
+
+		// Inject compiled Tailwind CSS so consumers don't need Tailwind installed
+		const styleId = 'annotakit-compiled-styles';
+		if (!document.getElementById(styleId)) {
+			const style = document.createElement('style');
+			style.id = styleId;
+			style.textContent = annotakitCSS;
+			document.head.appendChild(style);
+		}
+
 		annotakitState.loadFromStorage();
 		const savedColor = loadHighlightColor(annotakitState.storageKey);
 		if (savedColor) annotakitState.highlightColor = savedColor;
@@ -179,6 +190,7 @@
 			document.body.classList.remove('annotakit-active');
 			document.documentElement.removeAttribute('data-annotakit-theme');
 			document.getElementById('annotakit-freeze-styles')?.remove();
+			document.getElementById(styleId)?.remove();
 			clearHighlightColor();
 		};
 	});

@@ -28,13 +28,12 @@ Requires `svelte ^5.35.0` as a peer dependency.
 
 ## Usage
 
-Import the component and stylesheet in your root layout:
+Import the component in your root layout:
 
 ```svelte
 <!-- src/routes/+layout.svelte -->
 <script>
   import { Annotakit } from 'annotakit';
-  import 'annotakit/styles';
 </script>
 
 <Annotakit />

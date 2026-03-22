@@ -7,3 +7,6 @@ build
 !.env.example
 .DS_Store
 *.local
+
+# Auto-generated build artifacts
+packages/core/src/lib/styles/generated-css.ts

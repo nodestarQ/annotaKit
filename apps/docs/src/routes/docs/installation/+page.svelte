@@ -32,13 +32,12 @@
 <h2>Add to your layout</h2>
 
 <p>
-	Import the component and stylesheet in your root layout:
+	Import the component in your root layout:
 </p>
 
 <pre><code>&lt;!-- src/routes/+layout.svelte --&gt;
 &lt;script&gt;
   import &#123; Annotakit &#125; from 'annotakit';
-  import 'annotakit/styles';
 &lt;/script&gt;
 
 &lt;Annotakit /&gt;

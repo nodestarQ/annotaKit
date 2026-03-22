@@ -1,6 +1,6 @@
 {
   "name": "annotakit",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "AnnotaKit lets you click your UI, leave notes, and generate agent-ready context.",
   "license": "MIT",
   "type": "module",
@@ -12,7 +12,6 @@
       "svelte": "./dist/index.js",
       "default": "./dist/index.js"
     },
-    "./styles": "./dist/styles/annotakit.css",
     "./theme": "./dist/styles/theme.css"
   },
   "files": [
@@ -24,7 +23,8 @@
     "dev": "vite dev",
     "build": "vite build && npm run package",
     "preview": "vite preview",
-    "package": "svelte-kit sync && svelte-package -o dist && npx @tailwindcss/cli -i src/lib/styles/utilities.css -o dist/styles/annotakit.css --minify",
+    "build:css": "npx @tailwindcss/cli -i src/lib/styles/utilities.css -o /tmp/annotakit-compiled.css --minify && node scripts/embed-css.js",
+    "package": "npm run build:css && svelte-kit sync && svelte-package -o dist",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json"
   },
   "peerDependencies": {
