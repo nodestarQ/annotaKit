@@ -1,0 +1,22 @@
+{
+  "name": "annotakit-extension",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npm run build -- --mode development",
+    "build": "ENTRY=content vite build && ENTRY=popup vite build && ENTRY=service-worker vite build",
+    "build:chrome": "npm run build && node scripts/package.js chrome",
+    "build:firefox": "npm run build && node scripts/package.js firefox"
+  },
+  "dependencies": {
+    "annotakit": "workspace:*"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^5.0.0",
+    "@types/chrome": "^0.0.304",
+    "svelte": "^5.35.0",
+    "typescript": "^5.8.0",
+    "vite": "^6.3.0"
+  }
+}

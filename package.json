@@ -7,6 +7,9 @@
     "dev:docs": "pnpm -C apps/docs dev",
     "build": "pnpm -C packages/core package",
     "build:docs": "pnpm -C apps/docs build",
-    "check": "pnpm -C packages/core check"
+    "check": "pnpm -C packages/core check",
+    "build:ext": "pnpm -C packages/extension build",
+    "build:ext:chrome": "pnpm -C packages/extension build:chrome",
+    "build:ext:firefox": "pnpm -C packages/extension build:firefox"
   }
 }
