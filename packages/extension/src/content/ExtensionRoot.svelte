@@ -3,41 +3,41 @@
 	import { annotakitState } from 'annotakit/state';
 	import type { AnnotakitColor, AnnotakitPosition, OutputFormat, AnnotakitTheme } from 'annotakit/types';
 	import { applyHighlightColor, clearHighlightColor, loadHighlightColor, saveHighlightColor } from 'annotakit/core/colors.js';
+	import { loadSettings } from '../shared/storage.js';
+	import type { Message } from '../shared/messaging.js';
 	import Toolbar from 'annotakit/components/Toolbar.svelte';
 	import OverlayLayer from 'annotakit/components/OverlayLayer.svelte';
 	import OutputDialog from 'annotakit/components/OutputDialog.svelte';
 
 	interface Props {
 		shadowHost: HTMLElement;
-		position?: AnnotakitPosition;
-		outputFormat?: OutputFormat;
-		theme?: AnnotakitTheme;
-		highlightColor?: AnnotakitColor;
 	}
 
-	let {
-		shadowHost,
-		position = 'bottom-right',
-		outputFormat = 'standard',
-		theme = 'auto',
-		highlightColor = 'green'
-	}: Props = $props();
+	let { shadowHost }: Props = $props();
 
 	let mounted = $state(false);
 
-	// Sync props to state
-	$effect(() => {
-		annotakitState.position = position;
-		if (typeof window === 'undefined' || !localStorage.getItem('annotakit-output-format')) {
-			annotakitState.outputFormat = outputFormat;
+	// Load settings from extension storage and sync to state
+	async function applySettings() {
+		const settings = await loadSettings();
+
+		// Check if current domain is disabled
+		const hostname = location.hostname;
+		if (settings.disabledDomains.includes(hostname)) {
+			annotakitState.enabled = false;
+			return;
 		}
-		annotakitState.theme = theme;
-		annotakitState.highlightColor = highlightColor;
+
+		annotakitState.position = settings.position;
+		if (!localStorage.getItem('annotakit-output-format')) {
+			annotakitState.outputFormat = settings.outputFormat;
+		}
+		annotakitState.theme = settings.theme;
+		annotakitState.highlightColor = settings.highlightColor;
 		annotakitState.storageKey = 'annotakit';
 		annotakitState.retentionDays = 7;
-		annotakitState.enabled = true;
-		annotakitState.minimized = false;
-	});
+		annotakitState.enabled = settings.enabled;
+	}
 
 	// Resolve theme — set on shadow host instead of document.documentElement
 	$effect(() => {
@@ -117,7 +117,24 @@
 		}
 	}
 
-	onMount(() => {
+	// Report annotation count to badge
+	$effect(() => {
+		if (!mounted) return;
+		const count = annotakitState.annotationCount;
+		const enabled = annotakitState.enabled;
+		try {
+			chrome.runtime.sendMessage({
+				type: 'state-update',
+				count,
+				enabled
+			} satisfies Message);
+		} catch { /* extension context may be invalidated */ }
+	});
+
+	onMount(async () => {
+		// Load settings from extension storage
+		await applySettings();
+
 		mounted = true;
 
 		// Inject crosshair cursor style into host page
@@ -140,10 +157,12 @@
 		} catch { /* storage unavailable */ }
 		document.addEventListener('keydown', handleKeyDown);
 
-		// Listen for toggle messages from background/popup
-		chrome.runtime.onMessage.addListener((message) => {
+		// Listen for messages from background/popup
+		chrome.runtime.onMessage.addListener((message: Message) => {
 			if (message.type === 'toggle') {
 				annotakitState.toggleMinimized();
+			} else if (message.type === 'settings-changed') {
+				applySettings();
 			}
 		});
 
