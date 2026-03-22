@@ -12,10 +12,16 @@
       "svelte": "./dist/index.js",
       "default": "./dist/index.js"
     },
-    "./theme": "./dist/styles/theme.css"
+    "./theme": "./dist/styles/theme.css",
+    "./components/*": "./src/lib/components/*",
+    "./core/*": "./src/lib/core/*",
+    "./styles/*": "./src/lib/styles/*",
+    "./state": "./src/lib/state.svelte.ts",
+    "./types": "./src/lib/types.ts"
   },
   "files": [
     "dist",
+    "src/lib",
     "!dist/**/*.test.*",
     "!dist/**/*.spec.*"
   ],

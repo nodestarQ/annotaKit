@@ -37,9 +37,9 @@ export function loadHighlightColor(storageKey: string): AnnotakitColor | null {
 	return null;
 }
 
-export function applyHighlightColor(color: AnnotakitColor): void {
+export function applyHighlightColor(color: AnnotakitColor, root?: HTMLElement): void {
 	const preset = COLOR_PRESETS[color];
-	const style = document.documentElement.style;
+	const style = (root ?? document.documentElement).style;
 	style.setProperty('--color-annotakit-primary', preset.base);
 	style.setProperty('--color-annotakit-primary-light', preset.light);
 	style.setProperty('--color-annotakit-primary-dark', preset.dark);
@@ -47,8 +47,8 @@ export function applyHighlightColor(color: AnnotakitColor): void {
 	style.setProperty('--color-annotakit-highlight-border', `${preset.base}99`);
 }
 
-export function clearHighlightColor(): void {
-	const style = document.documentElement.style;
+export function clearHighlightColor(root?: HTMLElement): void {
+	const style = (root ?? document.documentElement).style;
 	style.removeProperty('--color-annotakit-primary');
 	style.removeProperty('--color-annotakit-primary-light');
 	style.removeProperty('--color-annotakit-primary-dark');
