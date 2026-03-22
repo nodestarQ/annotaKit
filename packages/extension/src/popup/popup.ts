@@ -1,2 +1,4 @@
-// Popup entry point
-console.log('[annotaKit] popup loaded');
+import { mount } from 'svelte';
+import Popup from './Popup.svelte';
+
+mount(Popup, { target: document.getElementById('app')! });
